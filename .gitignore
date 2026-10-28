@@ -1,0 +1,24 @@
+# Terraform
+examples/
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+
+# Go binaries
+*.exe
+*.test
+*.out
+
+# Provider binary
+terraform-provider-atatus
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Scratch / Docs
+README2.md
