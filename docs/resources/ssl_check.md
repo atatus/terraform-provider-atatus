@@ -1,3 +1,10 @@
+---
+page_title: "atatus_ssl_check Resource - terraform-provider-atatus"
+subcategory: ""
+description: |-
+  The atatus_ssl_check resource manages SSL/TLS certificate and connection monitoring checks in Atatus.
+---
+
 # `atatus_ssl_check` Resource
 
 The `atatus_ssl_check` resource manages SSL/TLS certificate and connection monitoring checks in Atatus.
@@ -117,3 +124,12 @@ When specifying testing locations in the `locations` attribute of any synthetic 
 - **`emails`** - (List of Strings) Email addresses to alert directly when the check fails (auto-mapped to Atatus notification channels).
 
 - **`channel_ids`** - (List of Strings) Notification channel IDs to alert on failure.
+## Import
+
+An existing check is imported by its id, the 24-character hex value in the check's URL in Atatus:
+
+```shell
+terraform import atatus_ssl_check.example 64b7f0c2e4b0a1b2c3d4e5f6
+```
+
+After import, `emails` lists the check's email notification channels and `channel_ids` the rest. Run `terraform plan` to see how the imported check differs from your configuration.

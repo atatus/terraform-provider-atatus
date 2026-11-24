@@ -1,3 +1,10 @@
+---
+page_title: "atatus_http_check Resource - terraform-provider-atatus"
+subcategory: ""
+description: |-
+  The atatus_http_check resource manages HTTP/API synthetic monitoring checks in Atatus.
+---
+
 # `atatus_http_check` Resource
 
 The `atatus_http_check` resource manages HTTP/API synthetic monitoring checks in Atatus.
@@ -175,3 +182,12 @@ When specifying testing locations in the `locations` attribute of any synthetic 
 - **`emails`** - (List of Strings) List of notification email addresses to alert when the check fails. Emails are automatically mapped to configured Atatus notification channels.
 
 - **`channel_ids`** - (List of Strings) List of specific Atatus notification channel IDs (e.g. Slack, PagerDuty, Webhook channels).
+## Import
+
+An existing check is imported by its id, the 24-character hex value in the check's URL in Atatus:
+
+```shell
+terraform import atatus_http_check.example 64b7f0c2e4b0a1b2c3d4e5f6
+```
+
+After import, `emails` lists the check's email notification channels and `channel_ids` the rest. Run `terraform plan` to see how the imported check differs from your configuration.

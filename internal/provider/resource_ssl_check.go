@@ -1,15 +1,12 @@
 package provider
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 	"regexp"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -25,9 +22,10 @@ import (
 )
 
 var (
-	_ resource.Resource               = &SSLCheckResource{}
-	_ resource.ResourceWithConfigure  = &SSLCheckResource{}
-	_ resource.ResourceWithModifyPlan = &SSLCheckResource{}
+	_ resource.Resource                = &SSLCheckResource{}
+	_ resource.ResourceWithConfigure   = &SSLCheckResource{}
+	_ resource.ResourceWithModifyPlan  = &SSLCheckResource{}
+	_ resource.ResourceWithImportState = &SSLCheckResource{}
 )
 
 func NewSSLCheckResource() resource.Resource {
@@ -35,10 +33,7 @@ func NewSSLCheckResource() resource.Resource {
 }
 
 type SSLCheckResource struct {
-	client    *http.Client
-	apiKey    string
-	accountID string
-	authType  string
+	syntheticBase
 }
 
 type SSLCheckAssertionModel struct {
@@ -94,23 +89,23 @@ type SSLCheckPayload struct {
 }
 
 type SSLCheckResponse struct {
-	ID                string           `json:"_id"`
-	IDAlt             string           `json:"id"`
-	Name              string           `json:"name"`
-	Host              string           `json:"host"`
-	Server            string           `json:"server"`
-	Port              int64            `json:"port"`
-	Subtype           string           `json:"subtype"`
-	Frequency         int64            `json:"frequency"`
-	MinLocationFailed int64            `json:"minLocationFailed"`
-	RetryCount        int64            `json:"retryCount"`
-	ChannelIDs        []string         `json:"channelIds"`
-	RunType           string           `json:"runType"`
-	Locations         []string         `json:"locations"`
-	Tags              []string         `json:"tags"`
+	ID                string              `json:"_id"`
+	IDAlt             string              `json:"id"`
+	Name              string              `json:"name"`
+	Host              string              `json:"host"`
+	Server            string              `json:"server"`
+	Port              int64               `json:"port"`
+	Subtype           string              `json:"subtype"`
+	Frequency         int64               `json:"frequency"`
+	MinLocationFailed int64               `json:"minLocationFailed"`
+	RetryCount        int64               `json:"retryCount"`
+	ChannelIDs        []string            `json:"channelIds"`
+	RunType           string              `json:"runType"`
+	Locations         []string            `json:"locations"`
+	Tags              []string            `json:"tags"`
 	Assertions        []map[string]string `json:"assertions"`
-	AccountID         string           `json:"accountId"`
-	Request           HTTPCheckReqData `json:"request"`
+	AccountID         string              `json:"accountId"`
+	Request           HTTPCheckReqData    `json:"request"`
 }
 
 func (r *SSLCheckResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -153,6 +148,7 @@ func (r *SSLCheckResource) Schema(ctx context.Context, req resource.SchemaReques
 				Optional:    true,
 				Computed:    true,
 				Default:     int64default.StaticInt64(0),
+				Validators:  []validator.Int64{int64validator.Between(0, 3)},
 			},
 			"min_location_failed": schema.Int64Attribute{
 				Description: "Minimum number of locations that must fail before alerting (default: 1). Only applicable when run_type is 'parallel'. Inapplicable and not allowed when run_type is 'sequential'.",
@@ -188,6 +184,7 @@ func (r *SSLCheckResource) Schema(ctx context.Context, req resource.SchemaReques
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
+				Default:     defaultLocations,
 			},
 			"tags": schema.ListAttribute{
 				Description: "List of tags (e.g., [\"env:production\"]).",
@@ -233,115 +230,6 @@ func (r *SSLCheckResource) Schema(ctx context.Context, req resource.SchemaReques
 	}
 }
 
-func (r *SSLCheckResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	if req.ProviderData == nil {
-		return
-	}
-	cfg, ok := req.ProviderData.(*AtatusConfig)
-	if !ok {
-		resp.Diagnostics.AddError("Configuration Error", "Expected *AtatusConfig")
-		return
-	}
-	r.client = &http.Client{}
-	r.apiKey = cfg.ApiKey
-	r.accountID = cfg.AccountID
-	r.authType = cfg.AuthType
-}
-
-func (r *SSLCheckResource) setHeaders(req *http.Request) {
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("User-Agent", "terraform-provider-atatus")
-	if r.authType == "cookie" {
-		req.Header.Set("Cookie", r.apiKey)
-	} else {
-		req.Header.Set("X-API-KEY", r.apiKey)
-	}
-}
-
-func (r *SSLCheckResource) getLocations(ctx context.Context, locationsList types.List) ([]string, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	locations := []string{"US_NEW_YORK"}
-
-	if !locationsList.IsNull() && !locationsList.IsUnknown() {
-		var elements []types.String
-		diags.Append(locationsList.ElementsAs(ctx, &elements, false)...)
-		if diags.HasError() {
-			return locations, diags
-		}
-
-		if len(elements) > 0 {
-			locations = make([]string, 0, len(elements))
-			for _, el := range elements {
-				locations = append(locations, el.ValueString())
-			}
-		}
-	}
-	return locations, diags
-}
-
-func (r *SSLCheckResource) getTags(ctx context.Context, tagsList types.List) ([]string, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	tags := []string{}
-
-	if !tagsList.IsNull() && !tagsList.IsUnknown() {
-		var elements []types.String
-		diags.Append(tagsList.ElementsAs(ctx, &elements, false)...)
-		if diags.HasError() {
-			return tags, diags
-		}
-
-		if len(elements) > 0 {
-			tags = make([]string, 0, len(elements))
-			for _, el := range elements {
-				tags = append(tags, el.ValueString())
-			}
-		}
-	}
-	return tags, diags
-}
-
-func (r *SSLCheckResource) getChannelIDs(ctx context.Context, channelIDsList types.List) ([]string, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	channels := []string{}
-
-	if !channelIDsList.IsNull() && !channelIDsList.IsUnknown() {
-		var elements []types.String
-		diags.Append(channelIDsList.ElementsAs(ctx, &elements, false)...)
-		if diags.HasError() {
-			return channels, diags
-		}
-
-		if len(elements) > 0 {
-			channels = make([]string, 0, len(elements))
-			for _, el := range elements {
-				channels = append(channels, el.ValueString())
-			}
-		}
-	}
-	return channels, diags
-}
-
-func (r *SSLCheckResource) getEmails(ctx context.Context, emailsList types.List) ([]string, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	emails := []string{}
-
-	if !emailsList.IsNull() && !emailsList.IsUnknown() {
-		var elements []types.String
-		diags.Append(emailsList.ElementsAs(ctx, &elements, false)...)
-		if diags.HasError() {
-			return emails, diags
-		}
-
-		if len(elements) > 0 {
-			emails = make([]string, 0, len(elements))
-			for _, el := range elements {
-				emails = append(emails, el.ValueString())
-			}
-		}
-	}
-	return emails, diags
-}
-
 func (r *SSLCheckResource) getAssertions(ctx context.Context, list types.List) ([]SSLCheckAssertionModel, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	var assertions []SSLCheckAssertionModel
@@ -354,118 +242,6 @@ func (r *SSLCheckResource) getAssertions(ctx context.Context, list types.List) (
 
 func (r *SSLCheckResource) buildAssertionList(ctx context.Context, assertions []SSLCheckAssertionModel) (types.List, diag.Diagnostics) {
 	return types.ListValueFrom(ctx, sslAssertionElementType, assertions)
-}
-
-func (r *SSLCheckResource) fetchNotificationChannels(ctx context.Context) ([]NotificationChannel, error) {
-	if r.client == nil || r.apiKey == "" {
-		return nil, fmt.Errorf("provider client is not configured")
-	}
-
-	apiURL := "https://www.atatus.com/v2/channels"
-	httpReq, err := http.NewRequestWithContext(ctx, "GET", apiURL, nil)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create request: %w", err)
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		return nil, fmt.Errorf("failed to query notification channels: %w", err)
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		return nil, fmt.Errorf("failed to fetch notification channels (HTTP %d): %s", httpResp.StatusCode, string(respBytes))
-	}
-
-	var channels []NotificationChannel
-	if err := json.NewDecoder(httpResp.Body).Decode(&channels); err != nil {
-		return nil, fmt.Errorf("failed to parse notification channels: %w", err)
-	}
-
-	return channels, nil
-}
-
-func (r *SSLCheckResource) resolveEmailsToChannelIDs(ctx context.Context, emails []string) ([]string, error) {
-	if len(emails) == 0 {
-		return nil, nil
-	}
-
-	channels, err := r.fetchNotificationChannels(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	emailToID := make(map[string]string)
-	var availableEmails []string
-	for _, ch := range channels {
-		if strings.EqualFold(ch.Type, "EMAIL") {
-			rec := ch.Settings.Recipient
-			if rec == "" {
-				rec = ch.Name
-			}
-			if rec != "" {
-				emailToID[strings.ToLower(strings.TrimSpace(rec))] = ch.ID
-				availableEmails = append(availableEmails, rec)
-			}
-		}
-	}
-
-	var resolvedIDs []string
-	for _, email := range emails {
-		clean := strings.ToLower(strings.TrimSpace(email))
-		if id, ok := emailToID[clean]; ok {
-			resolvedIDs = append(resolvedIDs, id)
-		} else {
-			if len(availableEmails) > 0 {
-				return nil, fmt.Errorf("no email notification channel found for '%s' in Atatus account. Please create this notification channel in Atatus first. Available email channels in account: [%s]", email, strings.Join(availableEmails, ", "))
-			}
-			return nil, fmt.Errorf("no email notification channel found for '%s' in Atatus account. Please create this notification channel in Atatus first", email)
-		}
-	}
-
-	return resolvedIDs, nil
-}
-
-func (r *SSLCheckResource) resolveChannelIDsToEmails(ctx context.Context, channelIDs []string) ([]string, []string, error) {
-	if len(channelIDs) == 0 {
-		return nil, nil, nil
-	}
-
-	channels, err := r.fetchNotificationChannels(ctx)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	idToChannel := make(map[string]NotificationChannel)
-	for _, ch := range channels {
-		idToChannel[ch.ID] = ch
-	}
-
-	var emails []string
-	var nonEmailChannelIDs []string
-
-	for _, id := range channelIDs {
-		if ch, ok := idToChannel[id]; ok {
-			if strings.EqualFold(ch.Type, "EMAIL") {
-				rec := ch.Settings.Recipient
-				if rec == "" {
-					rec = ch.Name
-				}
-				if rec != "" {
-					emails = append(emails, rec)
-				}
-			} else {
-				nonEmailChannelIDs = append(nonEmailChannelIDs, id)
-			}
-		} else {
-			nonEmailChannelIDs = append(nonEmailChannelIDs, id)
-		}
-	}
-
-	return emails, nonEmailChannelIDs, nil
 }
 
 func normalizeSSLAssertions(input []SSLCheckAssertionModel) []map[string]string {
@@ -579,7 +355,7 @@ func (r *SSLCheckResource) ModifyPlan(ctx context.Context, req resource.ModifyPl
 		return
 	}
 
-	if r.client == nil || r.apiKey == "" {
+	if r.client == nil {
 		return
 	}
 
@@ -862,37 +638,9 @@ func (r *SSLCheckResource) Create(ctx context.Context, req resource.CreateReques
 		},
 	}
 
-	bodyBytes, err := json.Marshal(payload)
-	if err != nil {
-		resp.Diagnostics.AddError("JSON Encoding Error", err.Error())
-		return
-	}
-
-	apiURL := "https://www.atatus.com/v2/synthetic/checks"
-	httpReq, err := http.NewRequestWithContext(ctx, "POST", apiURL, bytes.NewBuffer(bodyBytes))
-	if err != nil {
-		resp.Diagnostics.AddError("Request Creation Error", err.Error())
-		return
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		resp.Diagnostics.AddError("API Request Failed", err.Error())
-		return
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		resp.Diagnostics.AddError("API Failure On Create", fmt.Sprintf("HTTP %d: %s", httpResp.StatusCode, string(respBytes)))
-		return
-	}
-
 	var result SSLCheckResponse
-	if err := json.NewDecoder(httpResp.Body).Decode(&result); err != nil {
-		resp.Diagnostics.AddError("JSON Decode Error", err.Error())
+	if err := r.createCheck(ctx, payload, &result); err != nil {
+		resp.Diagnostics.AddError("API Failure On Create", err.Error())
 		return
 	}
 
@@ -950,36 +698,13 @@ func (r *SSLCheckResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
-	apiURL := fmt.Sprintf("https://www.atatus.com/v2/synthetic/checks/%s", state.ID.ValueString())
-	httpReq, err := http.NewRequestWithContext(ctx, "GET", apiURL, nil)
-	if err != nil {
-		resp.Diagnostics.AddError("Request Creation Error", err.Error())
-		return
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		resp.Diagnostics.AddError("API Read Failed", err.Error())
-		return
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode == http.StatusNotFound {
-		resp.State.RemoveResource(ctx)
-		return
-	}
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		resp.Diagnostics.AddError("API Failure On Read", fmt.Sprintf("HTTP %d: %s", httpResp.StatusCode, string(respBytes)))
-		return
-	}
-
 	var result SSLCheckResponse
-	if err := json.NewDecoder(httpResp.Body).Decode(&result); err != nil {
-		resp.Diagnostics.AddError("JSON Decode Error", err.Error())
+	if err := r.getCheck(ctx, state.ID.ValueString(), "ssl", &result); err != nil {
+		if IsNotFound(err) {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		resp.Diagnostics.AddError("API Failure On Read", err.Error())
 		return
 	}
 
@@ -1029,33 +754,7 @@ func (r *SSLCheckResource) Read(ctx context.Context, req resource.ReadRequest, r
 		state.Tags = types.ListNull(types.StringType)
 	}
 
-	if len(result.ChannelIDs) > 0 {
-		resolvedEmails, nonEmailChannelIDs, err := r.resolveChannelIDsToEmails(ctx, result.ChannelIDs)
-		if err == nil {
-			if len(resolvedEmails) > 0 {
-				emList, listDiags := types.ListValueFrom(ctx, types.StringType, resolvedEmails)
-				resp.Diagnostics.Append(listDiags...)
-				if !resp.Diagnostics.HasError() {
-					state.Emails = emList
-				}
-			} else {
-				state.Emails = types.ListNull(types.StringType)
-			}
-
-			if len(nonEmailChannelIDs) > 0 {
-				chList, listDiags := types.ListValueFrom(ctx, types.StringType, nonEmailChannelIDs)
-				resp.Diagnostics.Append(listDiags...)
-				if !resp.Diagnostics.HasError() {
-					state.ChannelIDs = chList
-				}
-			} else {
-				state.ChannelIDs = types.ListNull(types.StringType)
-			}
-		}
-	} else {
-		state.ChannelIDs = types.ListNull(types.StringType)
-		state.Emails = types.ListNull(types.StringType)
-	}
+	r.readChannels(ctx, result.ChannelIDs, &state.Emails, &state.ChannelIDs, &resp.Diagnostics)
 
 	if len(result.Assertions) > 0 {
 		prevAssertions, _ := r.getAssertions(ctx, state.Assertions)
@@ -1229,31 +928,8 @@ func (r *SSLCheckResource) Update(ctx context.Context, req resource.UpdateReques
 		payload["minLocationFailed"] = minLocationFailed
 	}
 
-	bodyBytes, err := json.Marshal(payload)
-	if err != nil {
-		resp.Diagnostics.AddError("JSON Encoding Error", err.Error())
-		return
-	}
-
-	apiURL := fmt.Sprintf("https://www.atatus.com/v2/synthetic/checks/%s", state.ID.ValueString())
-	httpReq, err := http.NewRequestWithContext(ctx, "PATCH", apiURL, bytes.NewBuffer(bodyBytes))
-	if err != nil {
-		resp.Diagnostics.AddError("Request Creation Error", err.Error())
-		return
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		resp.Diagnostics.AddError("API Request Failed", err.Error())
-		return
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		resp.Diagnostics.AddError("API Failure On Update", fmt.Sprintf("HTTP %d: %s", httpResp.StatusCode, string(respBytes)))
+	if err := r.patchCheck(ctx, state.ID.ValueString(), payload); err != nil {
+		resp.Diagnostics.AddError("API Failure On Update", err.Error())
 		return
 	}
 
@@ -1305,25 +981,7 @@ func (r *SSLCheckResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
-	apiURL := fmt.Sprintf("https://www.atatus.com/v2/synthetic/checks/%s", state.ID.ValueString())
-	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", apiURL, nil)
-	if err != nil {
-		resp.Diagnostics.AddError("Request Creation Error", err.Error())
-		return
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		resp.Diagnostics.AddError("API Request Failed", err.Error())
-		return
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		resp.Diagnostics.AddError("API Failure On Delete", fmt.Sprintf("HTTP %d: %s", httpResp.StatusCode, string(respBytes)))
-		return
+	if err := r.deleteCheck(ctx, state.ID.ValueString()); err != nil {
+		resp.Diagnostics.AddError("API Failure On Delete", err.Error())
 	}
 }

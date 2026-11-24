@@ -6,6 +6,9 @@ This guide details the step-by-step process for preparing, releasing, and publis
 
 ## Step 1: Prepare the GitHub Repository
 
+> [!NOTE]
+> **One-time setup, already done (v1.0.0 is on the Registry).** Skip this step for later releases; it is kept for a fresh setup.
+
 1. **Confirm GitHub Organization & Registry Namespace:** Confirm the company GitHub organization and the intended Registry namespace (`atatus`).
 2. **Rename Repository:** Rename the repository from `atatus-terraform-provider` to `terraform-provider-atatus`.
    > [!NOTE]
@@ -29,17 +32,24 @@ This guide details the step-by-step process for preparing, releasing, and publis
    * `.github/workflows/release.yml`
 2. **Run Quality & Verification Checks:**
    ```bash
-   gofmt -w main.go
+   test -z "$(gofmt -l .)"
    go mod tidy
+   go vet ./...
    go test ./...
+   TF_ACC=1 go test ./... -count=1
+   go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@v0.20.1 validate --provider-name atatus
    go build -o /tmp/terraform-provider-atatus .
    git diff --check
    ```
+   The same checks run on every push and pull request (`.github/workflows/test.yml`); the tag should only go on a commit where that workflow passed.
 3. **Commit & Push:** Review the changes, commit them, and push them to the approved branch.
 
 ---
 
 ## Step 3: Configure GPG Signing
+
+> [!NOTE]
+> **One-time setup, already done (v1.0.0 is on the Registry).** Skip this step for later releases; it is kept for a fresh setup.
 
 1. **Generate GPG Key:** Generate an RSA GPG signing key:
    ```bash
@@ -73,21 +83,23 @@ This guide details the step-by-step process for preparing, releasing, and publis
 
 ---
 
-## Step 5: Create the First GitHub Release
+## Step 5: Create the GitHub Release
 
 Once the configuration, signing setup, and repository are ready:
 
 ```bash
 git switch main
 git pull --ff-only origin main
-git tag v1.0.0
-git push origin v1.0.0
+git tag v1.1.0
+git push origin v1.1.0
 ```
 
 > [!IMPORTANT]
-> Use `v1.0.0` only if it is the approved first release version and the tag does not already exist.
+> Use `v1.1.0` only if it is the approved release version and the tag does not already exist. `v1.0.0` is already published.
 
 Pushing the tag triggers the GitHub Actions workflow, which runs GoReleaser to compile cross-platform binaries and sign the release artifacts.
+
+Alternatively, run the **Release** workflow manually (Actions → Release → Run workflow, `workflow_dispatch`) and enter the version, e.g. `v1.1.0`. The workflow creates the tag from the selected branch and then releases it the same way.
 
 ---
 
@@ -96,14 +108,17 @@ Pushing the tag triggers the GitHub Actions workflow, which runs GoReleaser to c
 1. Open the repository's **Releases** page on GitHub and confirm that the release workflow succeeded.
 2. Check that the release contains:
    * Provider ZIP binaries for supported operating systems and architectures (`darwin_amd64`, `darwin_arm64`, `linux_amd64`, `linux_arm64`, `windows_amd64`, etc.).
-   * `terraform-provider-atatus_1.0.0_SHA256SUMS`
-   * `terraform-provider-atatus_1.0.0_SHA256SUMS.sig`
-   * The versioned Registry manifest: `terraform-provider-atatus_1.0.0_manifest.json`
+   * `terraform-provider-atatus_1.1.0_SHA256SUMS`
+   * `terraform-provider-atatus_1.1.0_SHA256SUMS.sig`
+   * The versioned Registry manifest: `terraform-provider-atatus_1.1.0_manifest.json`
 3. Ensure the checksums and signature are valid, and verify the release is published (not saved as a private draft).
 
 ---
 
 ## Step 7: Publish the Provider in Terraform Registry
+
+> [!NOTE]
+> **One-time setup, already done (v1.0.0 is on the Registry).** Skip this step for later releases; it is kept for a fresh setup.
 
 1. Open [https://registry.terraform.io/](https://registry.terraform.io/).
 2. Sign in using the GitHub account with the required repository permissions.
@@ -128,7 +143,7 @@ terraform {
   required_providers {
     atatus = {
       source  = "atatus/atatus"
-      version = "1.0.0"
+      version = "1.1.0"
     }
   }
 }

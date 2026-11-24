@@ -1,15 +1,12 @@
 package provider
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 	"regexp"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -26,9 +23,10 @@ import (
 )
 
 var (
-	_ resource.Resource               = &MultistepCheckResource{}
-	_ resource.ResourceWithConfigure  = &MultistepCheckResource{}
-	_ resource.ResourceWithModifyPlan = &MultistepCheckResource{}
+	_ resource.Resource                = &MultistepCheckResource{}
+	_ resource.ResourceWithConfigure   = &MultistepCheckResource{}
+	_ resource.ResourceWithModifyPlan  = &MultistepCheckResource{}
+	_ resource.ResourceWithImportState = &MultistepCheckResource{}
 )
 
 func NewMultistepCheckResource() resource.Resource {
@@ -36,10 +34,7 @@ func NewMultistepCheckResource() resource.Resource {
 }
 
 type MultistepCheckResource struct {
-	client    *http.Client
-	apiKey    string
-	accountID string
-	authType  string
+	syntheticBase
 }
 
 type APIStepAssertionModel struct {
@@ -78,62 +73,62 @@ type MultistepCheckModel struct {
 }
 
 type APIStepPayload struct {
-	ID                 string                 `json:"_id,omitempty"`
-	Name               string                 `json:"name"`
-	Type               string                 `json:"type"`
-	Subtype            string                 `json:"subtype"`
-	AllowFailure       bool                   `json:"allowFailure"`
-	ConsiderTestFailed bool                   `json:"considerTestFailed"`
-	RetryCount         int64                  `json:"retryCount"`
-	MinLocationFailed  int64                  `json:"minLocationFailed"`
-	ExtractedValues    []interface{}          `json:"extractedValues"`
+	ID                 string                   `json:"_id,omitempty"`
+	Name               string                   `json:"name"`
+	Type               string                   `json:"type"`
+	Subtype            string                   `json:"subtype"`
+	AllowFailure       bool                     `json:"allowFailure"`
+	ConsiderTestFailed bool                     `json:"considerTestFailed"`
+	RetryCount         int64                    `json:"retryCount"`
+	MinLocationFailed  int64                    `json:"minLocationFailed"`
+	ExtractedValues    []interface{}            `json:"extractedValues"`
 	Assertions         []map[string]interface{} `json:"assertions"`
-	Request            map[string]interface{} `json:"request"`
+	Request            map[string]interface{}   `json:"request"`
 }
 
 type MultistepCheckPayload struct {
-	Name              string                 `json:"name"`
-	Type              string                 `json:"type"`
-	Subtype           string                 `json:"subtype"`
-	Frequency         int64                  `json:"frequency"`
-	MinLocationFailed *int64                 `json:"minLocationFailed,omitempty"`
-	RetryCount        int64                  `json:"retryCount"`
-	ChannelIDs        []string               `json:"channelIds"`
-	RunType           string                 `json:"runType"`
-	Locations         []string               `json:"locations"`
-	Tags              []string               `json:"tags"`
+	Name              string                   `json:"name"`
+	Type              string                   `json:"type"`
+	Subtype           string                   `json:"subtype"`
+	Frequency         int64                    `json:"frequency"`
+	MinLocationFailed *int64                   `json:"minLocationFailed,omitempty"`
+	RetryCount        int64                    `json:"retryCount"`
+	ChannelIDs        []string                 `json:"channelIds"`
+	RunType           string                   `json:"runType"`
+	Locations         []string                 `json:"locations"`
+	Tags              []string                 `json:"tags"`
 	Assertions        []map[string]interface{} `json:"assertions"`
-	APISteps          []APIStepPayload       `json:"apiSteps"`
-	Request           map[string]interface{} `json:"request"`
+	APISteps          []APIStepPayload         `json:"apiSteps"`
+	Request           map[string]interface{}   `json:"request"`
 }
 
 type APIStepResponse struct {
-	ID                 string                 `json:"_id"`
-	Name               string                 `json:"name"`
-	Type               string                 `json:"type"`
-	Subtype            string                 `json:"subtype"`
-	AllowFailure       bool                   `json:"allowFailure"`
-	ConsiderTestFailed bool                   `json:"considerTestFailed"`
-	RetryCount         int64                  `json:"retryCount"`
-	MinLocationFailed  int64                  `json:"minLocationFailed"`
+	ID                 string                   `json:"_id"`
+	Name               string                   `json:"name"`
+	Type               string                   `json:"type"`
+	Subtype            string                   `json:"subtype"`
+	AllowFailure       bool                     `json:"allowFailure"`
+	ConsiderTestFailed bool                     `json:"considerTestFailed"`
+	RetryCount         int64                    `json:"retryCount"`
+	MinLocationFailed  int64                    `json:"minLocationFailed"`
 	Assertions         []map[string]interface{} `json:"assertions"`
-	Request            HTTPCheckReqData       `json:"request"`
+	Request            HTTPCheckReqData         `json:"request"`
 }
 
 type MultistepCheckResponse struct {
-	ID                string              `json:"_id"`
-	IDAlt             string              `json:"id"`
-	Name              string              `json:"name"`
-	Subtype           string              `json:"subtype"`
-	Frequency         int64               `json:"frequency"`
-	MinLocationFailed int64               `json:"minLocationFailed"`
-	RetryCount        int64               `json:"retryCount"`
-	ChannelIDs        []string            `json:"channelIds"`
-	RunType           string              `json:"runType"`
-	Locations         []string            `json:"locations"`
-	Tags              []string            `json:"tags"`
-	APISteps          []APIStepResponse   `json:"apiSteps"`
-	AccountID         string              `json:"accountId"`
+	ID                string            `json:"_id"`
+	IDAlt             string            `json:"id"`
+	Name              string            `json:"name"`
+	Subtype           string            `json:"subtype"`
+	Frequency         int64             `json:"frequency"`
+	MinLocationFailed int64             `json:"minLocationFailed"`
+	RetryCount        int64             `json:"retryCount"`
+	ChannelIDs        []string          `json:"channelIds"`
+	RunType           string            `json:"runType"`
+	Locations         []string          `json:"locations"`
+	Tags              []string          `json:"tags"`
+	APISteps          []APIStepResponse `json:"apiSteps"`
+	AccountID         string            `json:"accountId"`
 }
 
 var stepAssertionElementType = types.ObjectType{
@@ -191,6 +186,7 @@ func (r *MultistepCheckResource) Schema(ctx context.Context, req resource.Schema
 				Optional:    true,
 				Computed:    true,
 				Default:     int64default.StaticInt64(0),
+				Validators:  []validator.Int64{int64validator.Between(0, 3)},
 			},
 			"min_location_failed": schema.Int64Attribute{
 				Description: "Minimum number of locations that must fail before alerting (default: 1). Only applicable when run_type is 'parallel'. Inapplicable and not allowed when run_type is 'sequential'.",
@@ -226,6 +222,7 @@ func (r *MultistepCheckResource) Schema(ctx context.Context, req resource.Schema
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
+				Default:     defaultLocations,
 			},
 			"tags": schema.ListAttribute{
 				Description: "List of tags (e.g., [\"env:production\"]).",
@@ -329,114 +326,6 @@ func (r *MultistepCheckResource) Schema(ctx context.Context, req resource.Schema
 	}
 }
 
-func (r *MultistepCheckResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	if req.ProviderData == nil {
-		return
-	}
-	cfg, ok := req.ProviderData.(*AtatusConfig)
-	if !ok {
-		resp.Diagnostics.AddError("Configuration Error", "Expected *AtatusConfig")
-		return
-	}
-	r.client = &http.Client{}
-	r.apiKey = cfg.ApiKey
-	r.accountID = cfg.AccountID
-	r.authType = cfg.AuthType
-}
-
-func (r *MultistepCheckResource) setHeaders(req *http.Request) {
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("User-Agent", "terraform-provider-atatus")
-	if r.authType == "cookie" {
-		req.Header.Set("Cookie", r.apiKey)
-	} else {
-		req.Header.Set("X-API-KEY", r.apiKey)
-	}
-}
-
-func (r *MultistepCheckResource) getLocations(ctx context.Context, locationsList types.List) ([]string, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	locations := []string{"US_NEW_YORK"}
-
-	if !locationsList.IsNull() && !locationsList.IsUnknown() {
-		var elements []types.String
-		diags.Append(locationsList.ElementsAs(ctx, &elements, false)...)
-		if diags.HasError() {
-			return locations, diags
-		}
-
-		if len(elements) > 0 {
-			locations = make([]string, 0, len(elements))
-			for _, el := range elements {
-				locations = append(locations, el.ValueString())
-			}
-		}
-	}
-	return locations, diags
-}
-
-func (r *MultistepCheckResource) getTags(ctx context.Context, tagsList types.List) ([]string, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	tags := []string{}
-
-	if !tagsList.IsNull() && !tagsList.IsUnknown() {
-		var elements []types.String
-		diags.Append(tagsList.ElementsAs(ctx, &elements, false)...)
-		if diags.HasError() {
-			return tags, diags
-		}
-
-		if len(elements) > 0 {
-			tags = make([]string, 0, len(elements))
-			for _, el := range elements {
-				tags = append(tags, el.ValueString())
-			}
-		}
-	}
-	return tags, diags
-}
-
-func (r *MultistepCheckResource) getChannelIDs(ctx context.Context, channelIDsList types.List) ([]string, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	channels := []string{}
-
-	if !channelIDsList.IsNull() && !channelIDsList.IsUnknown() {
-		var elements []types.String
-		diags.Append(channelIDsList.ElementsAs(ctx, &elements, false)...)
-		if diags.HasError() {
-			return channels, diags
-		}
-
-		if len(elements) > 0 {
-			channels = make([]string, 0, len(elements))
-			for _, el := range elements {
-				channels = append(channels, el.ValueString())
-			}
-		}
-	}
-	return channels, diags
-}
-
-func (r *MultistepCheckResource) getEmails(ctx context.Context, emailsList types.List) ([]string, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	var emails []string
-
-	if !emailsList.IsNull() && !emailsList.IsUnknown() {
-		var elements []types.String
-		diags.Append(emailsList.ElementsAs(ctx, &elements, false)...)
-		if diags.HasError() {
-			return emails, diags
-		}
-
-		for _, el := range elements {
-			if !el.IsNull() && !el.IsUnknown() && el.ValueString() != "" {
-				emails = append(emails, el.ValueString())
-			}
-		}
-	}
-	return emails, diags
-}
-
 func (r *MultistepCheckResource) getSteps(ctx context.Context, stepsList types.List) ([]APIStepModel, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	var steps []APIStepModel
@@ -461,118 +350,6 @@ func (r *MultistepCheckResource) getStepAssertions(ctx context.Context, assertio
 		}
 	}
 	return assertions, diags
-}
-
-func (r *MultistepCheckResource) fetchNotificationChannels(ctx context.Context) ([]NotificationChannel, error) {
-	if r.client == nil || r.apiKey == "" {
-		return nil, fmt.Errorf("provider client is not configured")
-	}
-
-	apiURL := "https://www.atatus.com/v2/channels"
-	httpReq, err := http.NewRequestWithContext(ctx, "GET", apiURL, nil)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create request: %w", err)
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		return nil, fmt.Errorf("failed to query notification channels: %w", err)
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		return nil, fmt.Errorf("channels API error HTTP %d: %s", httpResp.StatusCode, string(respBytes))
-	}
-
-	var channelList []NotificationChannel
-	if err := json.NewDecoder(httpResp.Body).Decode(&channelList); err != nil {
-		return nil, fmt.Errorf("failed to decode channels response: %w", err)
-	}
-
-	return channelList, nil
-}
-
-func (r *MultistepCheckResource) resolveEmailsToChannelIDs(ctx context.Context, emails []string) ([]string, error) {
-	if len(emails) == 0 {
-		return nil, nil
-	}
-
-	channels, err := r.fetchNotificationChannels(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	emailToID := make(map[string]string)
-	var availableEmails []string
-	for _, ch := range channels {
-		if strings.EqualFold(ch.Type, "EMAIL") {
-			rec := ch.Settings.Recipient
-			if rec == "" {
-				rec = ch.Name
-			}
-			if rec != "" {
-				emailToID[strings.ToLower(strings.TrimSpace(rec))] = ch.ID
-				availableEmails = append(availableEmails, rec)
-			}
-		}
-	}
-
-	var resolvedIDs []string
-	for _, email := range emails {
-		clean := strings.ToLower(strings.TrimSpace(email))
-		if id, ok := emailToID[clean]; ok {
-			resolvedIDs = append(resolvedIDs, id)
-		} else {
-			if len(availableEmails) > 0 {
-				return nil, fmt.Errorf("no email notification channel found for '%s' in Atatus account. Please create this notification channel in Atatus first. Available email channels in account: [%s]", email, strings.Join(availableEmails, ", "))
-			}
-			return nil, fmt.Errorf("no email notification channel found for '%s' in Atatus account. Please create this notification channel in Atatus first", email)
-		}
-	}
-
-	return resolvedIDs, nil
-}
-
-func (r *MultistepCheckResource) resolveChannelIDsToEmails(ctx context.Context, channelIDs []string) ([]string, []string, error) {
-	if len(channelIDs) == 0 {
-		return nil, nil, nil
-	}
-
-	channels, err := r.fetchNotificationChannels(ctx)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	idToChannel := make(map[string]NotificationChannel)
-	for _, ch := range channels {
-		idToChannel[ch.ID] = ch
-	}
-
-	var emails []string
-	var nonEmailChannelIDs []string
-
-	for _, id := range channelIDs {
-		if ch, ok := idToChannel[id]; ok {
-			if strings.EqualFold(ch.Type, "EMAIL") {
-				rec := ch.Settings.Recipient
-				if rec == "" {
-					rec = ch.Name
-				}
-				if rec != "" {
-					emails = append(emails, rec)
-				}
-			} else {
-				nonEmailChannelIDs = append(nonEmailChannelIDs, id)
-			}
-		} else {
-			nonEmailChannelIDs = append(nonEmailChannelIDs, id)
-		}
-	}
-
-	return emails, nonEmailChannelIDs, nil
 }
 
 func mapToStepAssertionModel(a map[string]interface{}) APIStepAssertionModel {
@@ -788,7 +565,7 @@ func (r *MultistepCheckResource) ModifyPlan(ctx context.Context, req resource.Mo
 		return
 	}
 
-	if r.client == nil || r.apiKey == "" {
+	if r.client == nil {
 		return
 	}
 
@@ -1175,42 +952,9 @@ func (r *MultistepCheckResource) Create(ctx context.Context, req resource.Create
 		Request:           nil,
 	}
 
-	bodyBytes, err := json.Marshal(payload)
-	if err != nil {
-		resp.Diagnostics.AddError("JSON Encoding Error", err.Error())
-		return
-	}
-
-	apiURL := "https://www.atatus.com/v2/synthetic/checks"
-	httpReq, err := http.NewRequestWithContext(ctx, "POST", apiURL, bytes.NewBuffer(bodyBytes))
-	if err != nil {
-		resp.Diagnostics.AddError("Request Creation Error", err.Error())
-		return
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		resp.Diagnostics.AddError("API Request Failed", err.Error())
-		return
-	}
-	defer httpResp.Body.Close()
-
-	respBytes, err := io.ReadAll(httpResp.Body)
-	if err != nil {
-		resp.Diagnostics.AddError("Response Read Error", err.Error())
-		return
-	}
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		resp.Diagnostics.AddError("API Failure", fmt.Sprintf("HTTP %d: %s", httpResp.StatusCode, string(respBytes)))
-		return
-	}
-
 	var atatusResp MultistepCheckResponse
-	if err := json.Unmarshal(respBytes, &atatusResp); err != nil {
-		resp.Diagnostics.AddError("JSON Decoding Error", fmt.Sprintf("Error decoding response: %s. Raw: %s", err.Error(), string(respBytes)))
+	if err := r.createCheck(ctx, payload, &atatusResp); err != nil {
+		resp.Diagnostics.AddError("API Failure On Create", err.Error())
 		return
 	}
 
@@ -1303,36 +1047,13 @@ func (r *MultistepCheckResource) Read(ctx context.Context, req resource.ReadRequ
 		return
 	}
 
-	apiURL := fmt.Sprintf("https://www.atatus.com/v2/synthetic/checks/%s", state.ID.ValueString())
-	httpReq, err := http.NewRequestWithContext(ctx, "GET", apiURL, nil)
-	if err != nil {
-		resp.Diagnostics.AddError("Request Creation Error", err.Error())
-		return
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		resp.Diagnostics.AddError("API Read Failed", err.Error())
-		return
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode == http.StatusNotFound {
-		resp.State.RemoveResource(ctx)
-		return
-	}
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		resp.Diagnostics.AddError("API Read Failure", fmt.Sprintf("HTTP %d: %s", httpResp.StatusCode, string(respBytes)))
-		return
-	}
-
 	var atatusResp MultistepCheckResponse
-	if err := json.NewDecoder(httpResp.Body).Decode(&atatusResp); err != nil {
-		resp.Diagnostics.AddError("JSON Decode Error", err.Error())
+	if err := r.getCheck(ctx, state.ID.ValueString(), "multi", &atatusResp); err != nil {
+		if IsNotFound(err) {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		resp.Diagnostics.AddError("API Failure On Read", err.Error())
 		return
 	}
 
@@ -1370,24 +1091,7 @@ func (r *MultistepCheckResource) Read(ctx context.Context, req resource.ReadRequ
 		state.Tags = types.ListNull(types.StringType)
 	}
 
-	emails, nonEmailChannels, err := r.resolveChannelIDsToEmails(ctx, atatusResp.ChannelIDs)
-	if err == nil {
-		if len(emails) > 0 {
-			emList, listDiags := types.ListValueFrom(ctx, types.StringType, emails)
-			resp.Diagnostics.Append(listDiags...)
-			state.Emails = emList
-		} else {
-			state.Emails = types.ListNull(types.StringType)
-		}
-
-		if len(nonEmailChannels) > 0 {
-			chList, listDiags := types.ListValueFrom(ctx, types.StringType, nonEmailChannels)
-			resp.Diagnostics.Append(listDiags...)
-			state.ChannelIDs = chList
-		} else {
-			state.ChannelIDs = types.ListNull(types.StringType)
-		}
-	}
+	r.readChannels(ctx, atatusResp.ChannelIDs, &state.Emails, &state.ChannelIDs, &resp.Diagnostics)
 
 	var stateSteps []APIStepModel
 	for _, respStep := range atatusResp.APISteps {
@@ -1586,31 +1290,8 @@ func (r *MultistepCheckResource) Update(ctx context.Context, req resource.Update
 		payload["minLocationFailed"] = minLocationFailed
 	}
 
-	bodyBytes, err := json.Marshal(payload)
-	if err != nil {
-		resp.Diagnostics.AddError("JSON Encoding Error", err.Error())
-		return
-	}
-
-	apiURL := fmt.Sprintf("https://www.atatus.com/v2/synthetic/checks/%s", state.ID.ValueString())
-	httpReq, err := http.NewRequestWithContext(ctx, "PATCH", apiURL, bytes.NewBuffer(bodyBytes))
-	if err != nil {
-		resp.Diagnostics.AddError("Request Creation Error", err.Error())
-		return
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		resp.Diagnostics.AddError("API Update Failed", err.Error())
-		return
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		resp.Diagnostics.AddError("API Failure On Update", fmt.Sprintf("HTTP %d: %s", httpResp.StatusCode, string(respBytes)))
+	if err := r.patchCheck(ctx, state.ID.ValueString(), payload); err != nil {
+		resp.Diagnostics.AddError("API Failure On Update", err.Error())
 		return
 	}
 
@@ -1661,29 +1342,7 @@ func (r *MultistepCheckResource) Delete(ctx context.Context, req resource.Delete
 		return
 	}
 
-	apiURL := fmt.Sprintf("https://www.atatus.com/v2/synthetic/checks/%s", state.ID.ValueString())
-	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", apiURL, nil)
-	if err != nil {
-		resp.Diagnostics.AddError("Request Creation Error", err.Error())
-		return
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		resp.Diagnostics.AddError("API Delete Failed", err.Error())
-		return
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode == http.StatusNotFound {
-		return
-	}
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		resp.Diagnostics.AddError("API Failure On Delete", fmt.Sprintf("HTTP %d: %s", httpResp.StatusCode, string(respBytes)))
-		return
+	if err := r.deleteCheck(ctx, state.ID.ValueString()); err != nil {
+		resp.Diagnostics.AddError("API Failure On Delete", err.Error())
 	}
 }

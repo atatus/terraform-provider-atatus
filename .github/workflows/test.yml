@@ -1,0 +1,53 @@
+# Terraform Provider test workflow.
+name: Test
+
+# Runs on every push and pull request so a change cannot reach a release tag
+# without passing formatting, vet, unit and acceptance tests.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      # The acceptance tests drive a real terraform binary against an
+      # in-process fake API (internal/provider/fake_api_test.go); no network
+      # access to Atatus and no credentials are needed.
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+      - name: gofmt
+        run: |
+          unformatted="$(gofmt -l .)"
+          if [ -n "$unformatted" ]; then
+            echo "These files need gofmt:"
+            echo "$unformatted"
+            exit 1
+          fi
+      - name: go vet
+        run: go vet ./...
+      # Checks docs/ has the layout and frontmatter the Terraform Registry
+      # expects, with one page per registered resource.
+      - name: Validate docs
+        run: go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@v0.20.1 validate --provider-name atatus
+      - name: Build
+        run: go build ./...
+      - name: Unit tests
+        run: go test ./...
+      - name: Acceptance tests (fake API)
+        run: go test ./... -count=1
+        env:
+          TF_ACC: '1'
+          CHECKPOINT_DISABLE: '1'

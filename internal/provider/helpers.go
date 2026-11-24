@@ -105,4 +105,3 @@ func normalizeRunType(rt string) (string, error) {
 	}
 	return "", fmt.Errorf("unsupported run_type '%s'. Supported options are: 'parallel', 'sequential'", rt)
 }
-

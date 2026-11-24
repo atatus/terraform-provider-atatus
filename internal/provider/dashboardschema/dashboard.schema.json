@@ -1,0 +1,8029 @@
+{
+ "$defs": {
+  "axis": {
+   "additionalProperties": true,
+   "properties": {
+    "includeZero": {
+     "type": "boolean"
+    },
+    "label": {
+     "type": "string"
+    },
+    "max": {},
+    "min": {},
+    "numBuckets": {
+     "description": "Distribution only: the x buckets.",
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "scale": {
+     "enum": [
+      "linear",
+      "log"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "childWidget": {
+   "oneOf": [
+    {
+     "$ref": "#/$defs/widget_alert_graph"
+    },
+    {
+     "$ref": "#/$defs/widget_alert_value"
+    },
+    {
+     "$ref": "#/$defs/widget_bar_chart"
+    },
+    {
+     "$ref": "#/$defs/widget_change"
+    },
+    {
+     "$ref": "#/$defs/widget_check_status"
+    },
+    {
+     "$ref": "#/$defs/widget_cost_summary"
+    },
+    {
+     "$ref": "#/$defs/widget_distribution"
+    },
+    {
+     "$ref": "#/$defs/widget_free_text"
+    },
+    {
+     "$ref": "#/$defs/widget_geomap"
+    },
+    {
+     "$ref": "#/$defs/widget_heatgrid"
+    },
+    {
+     "$ref": "#/$defs/widget_heatmap"
+    },
+    {
+     "$ref": "#/$defs/widget_hostmap"
+    },
+    {
+     "$ref": "#/$defs/widget_iframe"
+    },
+    {
+     "$ref": "#/$defs/widget_image"
+    },
+    {
+     "$ref": "#/$defs/widget_list_stream"
+    },
+    {
+     "$ref": "#/$defs/widget_manage_status"
+    },
+    {
+     "$ref": "#/$defs/widget_note"
+    },
+    {
+     "$ref": "#/$defs/widget_point_plot"
+    },
+    {
+     "$ref": "#/$defs/widget_profiling_flame_graph"
+    },
+    {
+     "$ref": "#/$defs/widget_query_value"
+    },
+    {
+     "$ref": "#/$defs/widget_sankey"
+    },
+    {
+     "$ref": "#/$defs/widget_scatterplot"
+    },
+    {
+     "$ref": "#/$defs/widget_slo"
+    },
+    {
+     "$ref": "#/$defs/widget_slo_list"
+    },
+    {
+     "$ref": "#/$defs/widget_split_group"
+    },
+    {
+     "$ref": "#/$defs/widget_sunburst"
+    },
+    {
+     "$ref": "#/$defs/widget_table"
+    },
+    {
+     "$ref": "#/$defs/widget_timeseries"
+    },
+    {
+     "$ref": "#/$defs/widget_toplist"
+    },
+    {
+     "$ref": "#/$defs/widget_topology_map"
+    },
+    {
+     "$ref": "#/$defs/widget_trace_service"
+    },
+    {
+     "$ref": "#/$defs/widget_treemap"
+    },
+    {
+     "$ref": "#/$defs/widget_video"
+    }
+   ],
+   "properties": {
+    "type": {
+     "enum": [
+      "alert_graph",
+      "alert_value",
+      "bar_chart",
+      "change",
+      "check_status",
+      "cost_summary",
+      "distribution",
+      "free_text",
+      "geomap",
+      "heatgrid",
+      "heatmap",
+      "hostmap",
+      "iframe",
+      "image",
+      "list_stream",
+      "manage_status",
+      "note",
+      "point_plot",
+      "profiling_flame_graph",
+      "query_value",
+      "sankey",
+      "scatterplot",
+      "slo",
+      "slo_list",
+      "split_group",
+      "sunburst",
+      "table",
+      "timeseries",
+      "toplist",
+      "topology_map",
+      "trace_service",
+      "treemap",
+      "video"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "type": "object"
+  },
+  "compute": {
+   "additionalProperties": true,
+   "properties": {
+    "aggregation": {
+     "description": "avg, min, max, sum, count, unique_count, pc50/75/90/95/99 \u2014 the ones the metric supports.",
+     "type": "string"
+    },
+    "bucket": {
+     "description": "Bucket size in milliseconds; 0 = automatic (sized to the time range).",
+     "type": "number"
+    },
+    "metricName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "conditionalFormat": {
+   "additionalProperties": true,
+   "properties": {
+    "backgroundColor": {
+     "type": "string"
+    },
+    "condition": {
+     "enum": [
+      "gt",
+      "gte",
+      "lt",
+      "lte",
+      "eq",
+      "between"
+     ],
+     "type": "string"
+    },
+    "enabled": {
+     "type": "boolean"
+    },
+    "hideValue": {
+     "type": "boolean"
+    },
+    "highlightRow": {
+     "type": "boolean"
+    },
+    "icon": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string"
+    },
+    "textColor": {
+     "type": "string"
+    },
+    "value": {
+     "type": "number"
+    },
+    "value2": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "customLink": {
+   "additionalProperties": false,
+   "properties": {
+    "defaultId": {
+     "description": "Overrides a built-in link (by its id).",
+     "maxLength": 64,
+     "type": "string"
+    },
+    "isHidden": {
+     "type": "boolean"
+    },
+    "label": {
+     "maxLength": 200,
+     "type": "string"
+    },
+    "link": {
+     "description": "An https:// or http:// URL, or a /path in the app; may use {{variables}}.",
+     "maxLength": 2048,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "formula": {
+   "additionalProperties": true,
+   "properties": {
+    "alias": {
+     "type": "string"
+    },
+    "color": {
+     "description": "The series colour (hex).",
+     "type": "string"
+    },
+    "formula": {
+     "description": "An expression over query names, e.g. \"query1 / query2 * 100\".",
+     "type": "string"
+    },
+    "hidden": {
+     "description": "Computed but not drawn (an input to another formula).",
+     "type": "boolean"
+    },
+    "numberFormat": {
+     "$ref": "#/$defs/numberFormat"
+    }
+   },
+   "type": "object"
+  },
+  "formulaOption": {
+   "additionalProperties": true,
+   "description": "Display options of the formula at the same index of requests[0].formulas.",
+   "properties": {
+    "autoscale": {
+     "type": "boolean"
+    },
+    "cellDisplayMode": {
+     "enum": [
+      "number",
+      "bar"
+     ],
+     "type": "string"
+    },
+    "conditionalFormats": {
+     "items": {
+      "$ref": "#/$defs/conditionalFormat"
+     },
+     "type": "array"
+    },
+    "hidden": {
+     "type": "boolean"
+    },
+    "precision": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "layout": {
+   "additionalProperties": false,
+   "description": "Position on the 12-column grid. Absent on an ordered board: the widget is placed after the others.",
+   "properties": {
+    "height": {
+     "description": "Height in rows (more than 0).",
+     "maximum": 1000,
+     "minimum": 0,
+     "type": "number"
+    },
+    "width": {
+     "description": "Width in columns (more than 0, at most 12).",
+     "maximum": 12,
+     "minimum": 0,
+     "type": "number"
+    },
+    "x": {
+     "description": "Column of the left edge (0-12).",
+     "maximum": 12,
+     "minimum": 0,
+     "type": "number"
+    },
+    "y": {
+     "description": "Row of the top edge.",
+     "maximum": 100000,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "marker": {
+   "additionalProperties": true,
+   "description": "A horizontal line or band on the y axis (on a distribution: a percentile, {value}).",
+   "properties": {
+    "label": {
+     "type": "string"
+    },
+    "lineStyle": {
+     "enum": [
+      "solid",
+      "dashed",
+      "dotted",
+      "bold"
+     ],
+     "type": "string"
+    },
+    "severity": {
+     "enum": [
+      "error",
+      "warning",
+      "ok",
+      "info"
+     ],
+     "type": "string"
+    },
+    "showLabel": {
+     "type": "boolean"
+    },
+    "to": {
+     "description": "The end of a range.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "type": {
+     "enum": [
+      "line",
+      "range"
+     ],
+     "type": "string"
+    },
+    "value": {
+     "type": [
+      "number",
+      "null"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "numberFormat": {
+   "additionalProperties": true,
+   "properties": {
+    "perUnit": {
+     "type": "string"
+    },
+    "unit": {
+     "description": "A unit name such as \"millisecond (ms)\", or \"custom:<label>\".",
+     "type": "string"
+    },
+    "unitScale": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "overlay": {
+   "additionalProperties": true,
+   "description": "Events drawn over a timeseries.",
+   "properties": {
+    "alias": {
+     "type": "string"
+    },
+    "color": {
+     "type": "string"
+    },
+    "filter": {},
+    "projectId": {
+     "type": "string"
+    },
+    "query": {
+     "$ref": "#/$defs/query"
+    },
+    "source": {
+     "enum": [
+      "deployments",
+      "problems",
+      "query",
+      "alerts",
+      "synthetic_incidents",
+      "watchtower"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "source"
+   ],
+   "type": "object"
+  },
+  "query": {
+   "additionalProperties": true,
+   "properties": {
+    "aggregation": {
+     "description": "apm_metrics: the aggregation (or compute.aggregation).",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "aggregator": {
+     "description": "How a scalar widget reduces the series; \"\" = the default.",
+     "enum": [
+      "avg",
+      "min",
+      "max",
+      "last",
+      "sum",
+      ""
+     ],
+     "type": "string"
+    },
+    "alias": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "bucket": {
+     "description": "metrics, apm_metrics, analytics, process: the bucket in milliseconds; 0 = automatic.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "compute": {
+     "$ref": "#/$defs/compute"
+    },
+    "dataSource": {
+     "enum": [
+      "metrics",
+      "rum",
+      "logs_stream",
+      "logs",
+      "apm_metrics",
+      "trace_spans",
+      "trace_stream",
+      "rum_stream",
+      "databases",
+      "process",
+      "infra",
+      "synthetics",
+      "kubernetes",
+      "analytics",
+      "network_devices",
+      "network",
+      "siem",
+      "mobile_rum",
+      "mobile_rum_stream",
+      "rum_v2",
+      "rum_v2_stream",
+      "profiling",
+      "issue_stream",
+      "event_stream"
+     ],
+     "type": "string"
+    },
+    "filters": {
+     "description": "Filter expression; a list is joined with \" AND \".",
+     "type": "string"
+    },
+    "groupBy": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "limit": {
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "metricName": {
+     "description": "apm_metrics, analytics, process, databases: the metric.",
+     "type": "string"
+    },
+    "name": {
+     "description": "Referred to by formulas (query1, query2, ...).",
+     "type": "string"
+    },
+    "query": {
+     "description": "metrics, infra, kubernetes, network: \"agg:metric{filters} by {tags}\".",
+     "type": "string"
+    },
+    "resourceHash": {
+     "type": "string"
+    },
+    "service": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "dataSource"
+   ],
+   "type": "object"
+  },
+  "request": {
+   "additionalProperties": true,
+   "properties": {
+    "displayType": {
+     "enum": [
+      "line",
+      "area",
+      "bar"
+     ],
+     "type": "string"
+    },
+    "formulas": {
+     "items": {
+      "$ref": "#/$defs/formula"
+     },
+     "type": "array"
+    },
+    "onRightYaxis": {
+     "type": "boolean"
+    },
+    "queries": {
+     "description": "At least one.",
+     "items": {
+      "$ref": "#/$defs/query"
+     },
+     "type": "array"
+    },
+    "responseFormat": {
+     "enum": [
+      "scalar",
+      "timeseries",
+      "event_list",
+      "hostmap"
+     ],
+     "type": "string"
+    },
+    "sort": {
+     "$ref": "#/$defs/sort"
+    },
+    "style": {
+     "$ref": "#/$defs/style"
+    }
+   },
+   "type": "object"
+  },
+  "sort": {
+   "additionalProperties": true,
+   "properties": {
+    "count": {
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "orderBy": {
+     "items": {
+      "additionalProperties": true,
+      "properties": {
+       "index": {
+        "type": "integer"
+       },
+       "name": {
+        "type": "string"
+       },
+       "order": {
+        "description": "asc or desc (any case).",
+        "type": "string"
+       },
+       "type": {
+        "enum": [
+         "formula",
+         "group"
+        ],
+        "type": "string"
+       }
+      },
+      "type": "object"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "streamQuery": {
+   "additionalProperties": true,
+   "properties": {
+    "columns": {
+     "items": {
+      "additionalProperties": true,
+      "properties": {
+       "field": {
+        "type": "string"
+       },
+       "width": {
+        "enum": [
+         "auto",
+         "compact",
+         "full"
+        ],
+        "type": "string"
+       }
+      },
+      "required": [
+       "field"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    },
+    "dataSource": {
+     "enum": [
+      "logs_stream",
+      "trace_stream",
+      "rum_stream",
+      "rum_v2_stream",
+      "mobile_rum_stream",
+      "issue_stream",
+      "event_stream"
+     ],
+     "type": "string"
+    },
+    "eventSize": {
+     "enum": [
+      "s",
+      "l"
+     ],
+     "type": "string"
+    },
+    "persona": {
+     "enum": [
+      "all",
+      "apm",
+      "browser",
+      "mobile"
+     ],
+     "type": "string"
+    },
+    "queryString": {
+     "type": "string"
+    },
+    "sort": {
+     "items": {
+      "additionalProperties": true,
+      "properties": {
+       "column": {
+        "type": "string"
+       },
+       "order": {
+        "type": "string"
+       }
+      },
+      "type": "object"
+     },
+     "type": "array"
+    },
+    "type": {
+     "description": "rum_stream: views, resources, vitals, errors; rum_v2_stream: views, actions, long_tasks, app_launches, telemetry, crashes, sessions, resources.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "dataSource"
+   ],
+   "type": "object"
+  },
+  "streamRequest": {
+   "additionalProperties": true,
+   "properties": {
+    "query": {
+     "$ref": "#/$defs/streamQuery"
+    },
+    "responseFormat": {
+     "enum": [
+      "event_list"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "query"
+   ],
+   "type": "object"
+  },
+  "style": {
+   "additionalProperties": true,
+   "properties": {
+    "hasValueLabels": {
+     "type": "boolean"
+    },
+    "lineType": {
+     "description": "Solid, Dash or Dot.",
+     "type": "string"
+    },
+    "lineWidth": {
+     "enum": [
+      "thin",
+      "normal",
+      "thick"
+     ],
+     "type": "string"
+    },
+    "orderBy": {
+     "enum": [
+      "values",
+      "tags"
+     ],
+     "type": "string"
+    },
+    "orderReverse": {
+     "type": "boolean"
+    },
+    "palette": {
+     "description": "One of classic, purple, cool, green, warm, orange, gray, blue, red, atatus16, atatus20, constant.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "tab": {
+   "additionalProperties": true,
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "maxLength": 100,
+     "type": "string"
+    },
+    "widgetIds": {
+     "description": "Ids of the widgets on this tab; every widget is on exactly one tab.",
+     "items": {},
+     "type": "array"
+    }
+   },
+   "required": [
+    "name"
+   ],
+   "type": "object"
+  },
+  "templateVariable": {
+   "additionalProperties": true,
+   "properties": {
+    "availableValues": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "default": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "name": {
+     "maxLength": 64,
+     "pattern": "^[A-Za-z0-9_.\\-]+$",
+     "type": "string"
+    },
+    "prefix": {
+     "description": "The attribute it filters on, e.g. service or host.",
+     "maxLength": 80,
+     "pattern": "^[@$]?[A-Za-z0-9_.\\-/:]+$",
+     "type": "string"
+    },
+    "valuesQuery": {
+     "additionalProperties": true,
+     "properties": {
+      "dataSource": {
+       "type": "string"
+      },
+      "field": {
+       "type": "string"
+      },
+      "filters": {
+       "type": "string"
+      },
+      "metricName": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "name",
+    "prefix"
+   ],
+   "type": "object"
+  },
+  "templateVariablePreset": {
+   "additionalProperties": true,
+   "description": "A saved variable selection a viewer applies in one step.",
+   "properties": {
+    "name": {
+     "description": "Unique on the board (compared trimmed).",
+     "maxLength": 100,
+     "type": "string"
+    },
+    "templateVariables": {
+     "description": "The variables this preset sets; every variable it does not name goes back to its saved default.",
+     "items": {
+      "additionalProperties": true,
+      "properties": {
+       "name": {
+        "description": "A variable in templateVariables.",
+        "maxLength": 64,
+        "pattern": "^[A-Za-z0-9_.\\-]+$",
+        "type": "string"
+       },
+       "values": {
+        "description": "Empty = all values.",
+        "items": {
+         "maxLength": 256,
+         "type": "string"
+        },
+        "maxItems": 50,
+        "type": "array"
+       }
+      },
+      "required": [
+       "name"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "name"
+   ],
+   "type": "object"
+  },
+  "time": {
+   "additionalProperties": true,
+   "description": "The widget's own time range; absent = the dashboard's.",
+   "properties": {
+    "end": {},
+    "start": {},
+    "unit": {
+     "description": "A relative unit (minute, hour, day, week, month, year) or \"custom\".",
+     "type": "string"
+    },
+    "value": {
+     "description": "How many units; \"\" with a custom range."
+    }
+   },
+   "type": "object"
+  },
+  "widget": {
+   "oneOf": [
+    {
+     "$ref": "#/$defs/widget_alert_graph"
+    },
+    {
+     "$ref": "#/$defs/widget_alert_value"
+    },
+    {
+     "$ref": "#/$defs/widget_bar_chart"
+    },
+    {
+     "$ref": "#/$defs/widget_change"
+    },
+    {
+     "$ref": "#/$defs/widget_check_status"
+    },
+    {
+     "$ref": "#/$defs/widget_cost_summary"
+    },
+    {
+     "$ref": "#/$defs/widget_distribution"
+    },
+    {
+     "$ref": "#/$defs/widget_free_text"
+    },
+    {
+     "$ref": "#/$defs/widget_geomap"
+    },
+    {
+     "$ref": "#/$defs/widget_group"
+    },
+    {
+     "$ref": "#/$defs/widget_heatgrid"
+    },
+    {
+     "$ref": "#/$defs/widget_heatmap"
+    },
+    {
+     "$ref": "#/$defs/widget_hostmap"
+    },
+    {
+     "$ref": "#/$defs/widget_iframe"
+    },
+    {
+     "$ref": "#/$defs/widget_image"
+    },
+    {
+     "$ref": "#/$defs/widget_list_stream"
+    },
+    {
+     "$ref": "#/$defs/widget_manage_status"
+    },
+    {
+     "$ref": "#/$defs/widget_note"
+    },
+    {
+     "$ref": "#/$defs/widget_point_plot"
+    },
+    {
+     "$ref": "#/$defs/widget_profiling_flame_graph"
+    },
+    {
+     "$ref": "#/$defs/widget_query_value"
+    },
+    {
+     "$ref": "#/$defs/widget_sankey"
+    },
+    {
+     "$ref": "#/$defs/widget_scatterplot"
+    },
+    {
+     "$ref": "#/$defs/widget_slo"
+    },
+    {
+     "$ref": "#/$defs/widget_slo_list"
+    },
+    {
+     "$ref": "#/$defs/widget_split_group"
+    },
+    {
+     "$ref": "#/$defs/widget_sunburst"
+    },
+    {
+     "$ref": "#/$defs/widget_table"
+    },
+    {
+     "$ref": "#/$defs/widget_timeseries"
+    },
+    {
+     "$ref": "#/$defs/widget_toplist"
+    },
+    {
+     "$ref": "#/$defs/widget_topology_map"
+    },
+    {
+     "$ref": "#/$defs/widget_trace_service"
+    },
+    {
+     "$ref": "#/$defs/widget_treemap"
+    },
+    {
+     "$ref": "#/$defs/widget_video"
+    }
+   ],
+   "properties": {
+    "type": {
+     "enum": [
+      "alert_graph",
+      "alert_value",
+      "bar_chart",
+      "change",
+      "check_status",
+      "cost_summary",
+      "distribution",
+      "free_text",
+      "geomap",
+      "group",
+      "heatgrid",
+      "heatmap",
+      "hostmap",
+      "iframe",
+      "image",
+      "list_stream",
+      "manage_status",
+      "note",
+      "point_plot",
+      "profiling_flame_graph",
+      "query_value",
+      "sankey",
+      "scatterplot",
+      "slo",
+      "slo_list",
+      "split_group",
+      "sunburst",
+      "table",
+      "timeseries",
+      "toplist",
+      "topology_map",
+      "trace_service",
+      "treemap",
+      "video"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "type": "object"
+  },
+  "widget_alert_graph": {
+   "additionalProperties": false,
+   "description": "An alert rule's metric over time.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a alert_graph widget.",
+     "properties": {
+      "policyId": {
+       "type": "string"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "ruleId": {
+       "pattern": "^[0-9a-f]{24}$",
+       "type": "string"
+      },
+      "ruleName": {
+       "type": "string"
+      },
+      "viz": {
+       "default": "timeseries",
+       "enum": [
+        "timeseries",
+        "toplist"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "ruleId"
+     ],
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a alert_graph has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "alert_graph"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "alert_graph",
+   "x-family": "entity"
+  },
+  "widget_alert_value": {
+   "additionalProperties": false,
+   "description": "An alert rule's current value.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a alert_value widget.",
+     "properties": {
+      "policyId": {
+       "type": "string"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "ruleId": {
+       "pattern": "^[0-9a-f]{24}$",
+       "type": "string"
+      },
+      "ruleName": {
+       "type": "string"
+      },
+      "textAlign": {
+       "default": "center",
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ],
+       "type": "string"
+      },
+      "unit": {
+       "maxLength": 20,
+       "type": "string"
+      }
+     },
+     "required": [
+      "ruleId"
+     ],
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a alert_value has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "alert_value"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "alert_value",
+   "x-family": "entity"
+  },
+  "widget_bar_chart": {
+   "additionalProperties": false,
+   "description": "Bars per group.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a bar_chart widget.",
+     "properties": {
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "barChart": {
+       "additionalProperties": true,
+       "properties": {
+        "display": {
+         "default": "stacked",
+         "enum": [
+          "stacked",
+          "flat"
+         ],
+         "type": "string"
+        },
+        "layout": {
+         "enum": [
+          "flat",
+          "stacked"
+         ],
+         "type": "string"
+        },
+        "scaling": {
+         "default": "absolute",
+         "enum": [
+          "absolute",
+          "relative"
+         ],
+         "type": "string"
+        },
+        "showValues": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "markers": {
+       "items": {
+        "$ref": "#/$defs/marker"
+       },
+       "type": "array"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      },
+      "yaxis": {
+       "$ref": "#/$defs/axis"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "bar_chart"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "bar_chart",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "scalar"
+  },
+  "widget_change": {
+   "additionalProperties": false,
+   "description": "Change against an earlier period, per group.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a change widget.",
+     "properties": {
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "change": {
+       "additionalProperties": true,
+       "properties": {
+        "changeType": {
+         "default": "absolute",
+         "enum": [
+          "absolute",
+          "relative"
+         ],
+         "type": "string"
+        },
+        "compareTo": {
+         "default": "hour",
+         "enum": [
+          "hour",
+          "day",
+          "week",
+          "month"
+         ],
+         "type": "string"
+        },
+        "formulaIndex": {
+         "default": 0,
+         "type": "integer"
+        },
+        "increaseGood": {
+         "default": true,
+         "type": "boolean"
+        },
+        "orderBy": {
+         "default": "change",
+         "enum": [
+          "change",
+          "name",
+          "present",
+          "past"
+         ],
+         "type": "string"
+        },
+        "orderDir": {
+         "default": "desc",
+         "enum": [
+          "asc",
+          "desc"
+         ],
+         "type": "string"
+        },
+        "showPresent": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "change"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "change",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "scalar"
+  },
+  "widget_check_status": {
+   "additionalProperties": false,
+   "description": "A check's status.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a check_status widget.",
+     "properties": {
+      "check": {
+       "description": "The check id.",
+       "type": "string"
+      },
+      "group": {
+       "type": "string"
+      },
+      "grouping": {
+       "default": "check",
+       "enum": [
+        "check",
+        "cluster"
+       ],
+       "type": "string"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "source": {
+       "default": "infra",
+       "enum": [
+        "infra",
+        "synthetics"
+       ],
+       "type": "string"
+      },
+      "tags": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a check_status has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "check_status"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "check_status",
+   "x-family": "entity"
+  },
+  "widget_cost_summary": {
+   "additionalProperties": false,
+   "description": "LLM cost or token usage.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a cost_summary widget.",
+     "properties": {
+      "filters": {
+       "maxLength": 200,
+       "type": "string"
+      },
+      "metric": {
+       "default": "cost",
+       "enum": [
+        "cost",
+        "tokens"
+       ],
+       "type": "string"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a cost_summary has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "cost_summary"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "cost_summary",
+   "x-family": "entity"
+  },
+  "widget_distribution": {
+   "additionalProperties": false,
+   "description": "A histogram of values.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a distribution widget.",
+     "properties": {
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "markers": {
+       "items": {
+        "$ref": "#/$defs/marker"
+       },
+       "type": "array"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      },
+      "xaxis": {
+       "$ref": "#/$defs/axis"
+      },
+      "yaxis": {
+       "$ref": "#/$defs/axis"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "distribution"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "distribution",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "scalar"
+  },
+  "widget_free_text": {
+   "additionalProperties": false,
+   "description": "Large plain text.",
+   "properties": {
+    "color": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a free_text widget.",
+     "properties": {
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a free_text has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "type": "string"
+    },
+    "textAlign": {
+     "enum": [
+      "flex-start",
+      "center",
+      "flex-end"
+     ],
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "free_text"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "free_text",
+   "x-family": "static"
+  },
+  "widget_geomap": {
+   "additionalProperties": false,
+   "description": "A world map coloured by country.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a geomap widget.",
+     "properties": {
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "paletteFlip": {
+       "type": "boolean"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      },
+      "view": {
+       "additionalProperties": true,
+       "properties": {
+        "center": {
+         "description": "[longitude, latitude]",
+         "items": {
+          "type": "number"
+         },
+         "type": "array"
+        },
+        "focus": {
+         "description": "WORLD, CUSTOM, a region (APAC, EMEA, ...) or a country name.",
+         "type": "string"
+        },
+        "zoom": {
+         "type": "number"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "geomap"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "geomap",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "scalar"
+  },
+  "widget_group": {
+   "additionalProperties": false,
+   "description": "A titled section holding other widgets (not other groups).",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a group widget.",
+     "properties": {
+      "backgroundColor": {
+       "type": "string"
+      },
+      "bannerImg": {
+       "type": "string"
+      },
+      "collapsed": {
+       "default": false,
+       "type": "boolean"
+      },
+      "headerStyle": {
+       "default": "default",
+       "enum": [
+        "default",
+        "emphasis",
+        "banner"
+       ],
+       "type": "string"
+      },
+      "powerpack": {
+       "additionalProperties": true,
+       "description": "Set when the group is a powerpack instance.",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "version": {
+         "type": "integer"
+        }
+       },
+       "type": "object"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "showTitle": {
+       "default": true,
+       "type": "boolean"
+      },
+      "templateVariables": {
+       "additionalProperties": true,
+       "properties": {
+        "controlledByPowerpack": {
+         "items": {},
+         "type": "array"
+        },
+        "controlledExternally": {
+         "items": {},
+         "type": "array"
+        }
+       },
+       "type": "object"
+      },
+      "titleAlign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ],
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a group has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "group"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "The widgets inside the group (no nested groups).",
+     "items": {
+      "$ref": "#/$defs/childWidget"
+     },
+     "maxItems": 100,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "group",
+   "x-family": "group"
+  },
+  "widget_heatgrid": {
+   "additionalProperties": false,
+   "description": "A row per group, coloured over time.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a heatgrid widget.",
+     "properties": {
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "heatgrid": {
+       "additionalProperties": true,
+       "properties": {
+        "colorScheme": {
+         "default": "oranges",
+         "type": "string"
+        },
+        "mode": {
+         "default": "gradient",
+         "enum": [
+          "gradient",
+          "discrete"
+         ],
+         "type": "string"
+        },
+        "reverse": {
+         "type": "boolean"
+        },
+        "rowLabelWidth": {
+         "enum": [
+          "auto",
+          "small",
+          "medium",
+          "large"
+         ],
+         "type": "string"
+        },
+        "showLegend": {
+         "default": true,
+         "type": "boolean"
+        },
+        "sortRows": {
+         "additionalProperties": true,
+         "properties": {
+          "by": {
+           "default": "avg",
+           "enum": [
+            "avg",
+            "max",
+            "min",
+            "sum",
+            "label"
+           ],
+           "type": "string"
+          },
+          "dir": {
+           "default": "desc",
+           "enum": [
+            "asc",
+            "desc"
+           ],
+           "type": "string"
+          }
+         },
+         "type": "object"
+        },
+        "stops": {
+         "items": {
+          "additionalProperties": true,
+          "properties": {
+           "color": {
+            "type": "string"
+           },
+           "max": {
+            "type": [
+             "number",
+             "null"
+            ]
+           },
+           "position": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number"
+           }
+          },
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "type": "object"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "heatgrid"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "heatgrid",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "timeseries"
+  },
+  "widget_heatmap": {
+   "additionalProperties": false,
+   "description": "Value buckets over time, coloured by count.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a heatmap widget.",
+     "properties": {
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "display": {
+       "additionalProperties": true,
+       "description": "Colour, bucket, axis and tooltip settings (calculate, colorScheme, yBucketMode, ...).",
+       "properties": {},
+       "type": "object"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      },
+      "yBuckets": {
+       "additionalProperties": true,
+       "properties": {
+        "count": {
+         "default": 30,
+         "maximum": 150,
+         "minimum": 5,
+         "type": "integer"
+        },
+        "max": {
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "min": {
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "scale": {
+         "default": "linear",
+         "enum": [
+          "linear",
+          "log",
+          "symlog"
+         ],
+         "type": "string"
+        },
+        "type": {
+         "enum": [
+          "numeric"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "yaxis": {
+       "$ref": "#/$defs/axis"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "heatmap"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "heatmap",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "timeseries"
+  },
+  "widget_hostmap": {
+   "additionalProperties": false,
+   "description": "Hosts, containers or pods as tiles coloured (and sized) by a metric.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a hostmap widget.",
+     "properties": {
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "items": {
+        "$ref": "#/$defs/formulaOption"
+       },
+       "type": "array"
+      },
+      "group": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "no_group_hosts": {
+       "default": true,
+       "type": "boolean"
+      },
+      "no_metric_hosts": {
+       "default": true,
+       "type": "boolean"
+      },
+      "node_type": {
+       "enum": [
+        "host",
+        "container",
+        "pod",
+        "cluster",
+        "service"
+       ],
+       "type": "string"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "requests": {
+       "additionalProperties": true,
+       "description": "The fill and size metrics: {q} or {metricName, aggregator, groupBy}.",
+       "properties": {
+        "fill": {
+         "additionalProperties": true,
+         "properties": {},
+         "type": "object"
+        },
+        "size": {
+         "additionalProperties": true,
+         "properties": {},
+         "type": "object"
+        }
+       },
+       "type": "object"
+      },
+      "scope": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "show_description": {
+       "type": "boolean"
+      },
+      "style": {
+       "additionalProperties": true,
+       "properties": {
+        "fill_max": {
+         "default": "auto"
+        },
+        "fill_min": {
+         "default": "auto"
+        },
+        "palette": {
+         "default": "green_to_orange",
+         "enum": [
+          "green_to_orange",
+          "green_to_red",
+          "blue",
+          "purple",
+          "cool",
+          "green",
+          "warm",
+          "orange",
+          "red",
+          "gray"
+         ],
+         "type": "string"
+        },
+        "palette_flip": {
+         "default": false,
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "hostmap"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "hostmap",
+   "x-family": "hostmap",
+   "x-requests": "queries",
+   "x-response-format": "hostmap"
+  },
+  "widget_iframe": {
+   "additionalProperties": false,
+   "description": "A web page, embedded.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a iframe widget.",
+     "properties": {
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "url": {
+       "description": "A public https:// URL.",
+       "type": "string"
+      }
+     },
+     "required": [
+      "url"
+     ],
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a iframe has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "iframe"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "iframe",
+   "x-family": "static"
+  },
+  "widget_image": {
+   "additionalProperties": false,
+   "description": "An image.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a image widget.",
+     "properties": {
+      "imageConfig": {
+       "additionalProperties": true,
+       "properties": {
+        "horizontalAlign": {
+         "default": "center",
+         "type": "string"
+        },
+        "imageFit": {
+         "default": "contain",
+         "enum": [
+          "fill",
+          "contain",
+          "cover",
+          "none",
+          "scale-down"
+         ],
+         "type": "string"
+        },
+        "padding": {
+         "default": "0px",
+         "type": "string"
+        },
+        "preset": {
+         "default": "centered",
+         "enum": [
+          "centered",
+          "background"
+         ],
+         "type": "string"
+        },
+        "showBorder": {
+         "type": "boolean"
+        },
+        "transparentBackground": {
+         "default": true,
+         "type": "boolean"
+        },
+        "url": {
+         "description": "https:// or http:// (public hosts), or a data:image/...;base64, URL.",
+         "type": "string"
+        },
+        "verticalAlign": {
+         "default": "center",
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a image has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "image"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "image",
+   "x-family": "static"
+  },
+  "widget_list_stream": {
+   "additionalProperties": false,
+   "description": "Raw events (logs, traces, RUM, issues) as a list.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a list_stream widget.",
+     "properties": {
+      "columns": {
+       "additionalProperties": true,
+       "properties": {
+        "display_order": {
+         "items": {
+          "additionalProperties": true,
+          "properties": {
+           "name": {
+            "type": "string"
+           },
+           "value": {}
+          },
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "type": "object"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/streamRequest"
+     },
+     "maxItems": 1,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "list_stream"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "list_stream",
+   "x-family": "stream",
+   "x-requests": "stream",
+   "x-response-format": "event_list"
+  },
+  "widget_manage_status": {
+   "additionalProperties": false,
+   "description": "Alert rule statuses: counts and a list.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a manage_status widget.",
+     "properties": {
+      "colorPreference": {
+       "default": "text",
+       "type": "string"
+      },
+      "display": {
+       "default": "countsAndList",
+       "enum": [
+        "counts",
+        "list",
+        "countsAndList"
+       ],
+       "type": "string"
+      },
+      "hideZeroCounts": {
+       "default": true,
+       "type": "boolean"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "query": {
+       "maxLength": 200,
+       "type": "string"
+      },
+      "showLastTriggered": {
+       "default": false,
+       "type": "boolean"
+      },
+      "sort": {
+       "default": "status,asc",
+       "pattern": "^(name|status|triggered),(asc|desc)$",
+       "type": "string"
+      },
+      "summaryType": {
+       "default": "monitors",
+       "enum": [
+        "monitors",
+        "groups",
+        "combined"
+       ],
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a manage_status has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "manage_status"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "manage_status",
+   "x-family": "entity"
+  },
+  "widget_note": {
+   "additionalProperties": false,
+   "description": "Text (Markdown), e.g. a section header.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a note widget.",
+     "properties": {
+      "backgroundColor": {
+       "type": "string"
+      },
+      "class": {
+       "type": "string"
+      },
+      "color": {
+       "type": "string"
+      },
+      "content": {
+       "description": "Markdown.",
+       "type": "string"
+      },
+      "fontSize": {
+       "description": "e.g. 14px.",
+       "type": "string"
+      },
+      "fontWeight": {
+       "type": "number"
+      },
+      "hasPadding": {
+       "type": "boolean"
+      },
+      "horizontalAlign": {
+       "enum": [
+        "flex-start",
+        "center",
+        "flex-end"
+       ],
+       "type": "string"
+      },
+      "lineHeight": {
+       "type": "string"
+      },
+      "pointerPosition": {
+       "type": "string"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "showPointer": {
+       "type": "boolean"
+      },
+      "verticalAlign": {
+       "enum": [
+        "flex-start",
+        "center",
+        "flex-end"
+       ],
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a note has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "note"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "note",
+   "x-family": "note"
+  },
+  "widget_point_plot": {
+   "additionalProperties": false,
+   "description": "Each event as a point over time.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a point_plot widget.",
+     "properties": {
+      "autoscale": {
+       "type": "boolean"
+      },
+      "columns": {
+       "additionalProperties": true,
+       "properties": {
+        "display_order": {
+         "items": {
+          "additionalProperties": true,
+          "properties": {
+           "name": {
+            "type": "string"
+           },
+           "value": {}
+          },
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "type": "object"
+      },
+      "legend_mode": {
+       "enum": [
+        "auto",
+        "none"
+       ],
+       "type": "string"
+      },
+      "markers": {
+       "items": {
+        "$ref": "#/$defs/marker"
+       },
+       "type": "array"
+      },
+      "pointPlot": {
+       "additionalProperties": true,
+       "properties": {
+        "groupColumn": {
+         "type": "string"
+        },
+        "limit": {
+         "default": 500,
+         "maximum": 1000,
+         "minimum": 1,
+         "type": "integer"
+        },
+        "numberFormat": {
+         "$ref": "#/$defs/numberFormat"
+        },
+        "sizeColumn": {
+         "type": "string"
+        },
+        "yColumn": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "rightYaxis": {
+       "$ref": "#/$defs/axis"
+      },
+      "yaxis": {
+       "$ref": "#/$defs/axis"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/streamRequest"
+     },
+     "maxItems": 1,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "point_plot"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "point_plot",
+   "x-family": "stream",
+   "x-requests": "stream",
+   "x-response-format": "event_list"
+  },
+  "widget_profiling_flame_graph": {
+   "additionalProperties": false,
+   "description": "A profiling flame graph.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a profiling_flame_graph widget.",
+     "properties": {
+      "colorBy": {
+       "enum": [
+        "hash",
+        "package"
+       ],
+       "type": "string"
+      },
+      "filters": {},
+      "groupBy": {
+       "enum": [
+        "function",
+        "file",
+        "line",
+        "directory"
+       ],
+       "type": "string"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "profileType": {
+       "default": "cpu",
+       "enum": [
+        "cpu",
+        "wall",
+        "alloc_space",
+        "alloc_objects",
+        "inuse_space",
+        "inuse_objects",
+        "goroutines",
+        "mutex",
+        "block"
+       ],
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a profiling_flame_graph has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "profiling_flame_graph"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "profiling_flame_graph",
+   "x-family": "entity"
+  },
+  "widget_query_value": {
+   "additionalProperties": false,
+   "description": "One big number.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a query_value widget.",
+     "properties": {
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "changeIndicator": {
+       "additionalProperties": true,
+       "properties": {
+        "color": {
+         "enum": [
+          "neutral",
+          "increase_good",
+          "decrease_good"
+         ],
+         "type": "string"
+        },
+        "compareTo": {
+         "enum": [
+          "period",
+          "day",
+          "week",
+          "month",
+          "custom"
+         ],
+         "type": "string"
+        },
+        "custom": {
+         "$ref": "#/$defs/time"
+        },
+        "display": {
+         "enum": [
+          "off",
+          "relative",
+          "absolute",
+          "both"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "textAlign": {
+       "default": "center",
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ],
+       "type": "string"
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "query_value"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "query_value",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "scalar"
+  },
+  "widget_sankey": {
+   "additionalProperties": false,
+   "description": "Network flows between endpoints.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a sankey widget.",
+     "properties": {
+      "columns": {
+       "items": {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       "maxItems": 8,
+       "type": "array"
+      },
+      "dataSource": {
+       "default": "netflow",
+       "type": "string"
+      },
+      "filters": {
+       "maxLength": 200,
+       "type": "string"
+      },
+      "limit": {
+       "default": 10,
+       "enum": [
+        10,
+        25,
+        50
+       ],
+       "type": "number"
+      },
+      "metric": {
+       "default": "bytes",
+       "enum": [
+        "bytes",
+        "packets",
+        "flows"
+       ],
+       "type": "string"
+      },
+      "orderByVolume": {
+       "default": true,
+       "type": "boolean"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a sankey has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "sankey"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "sankey",
+   "x-family": "entity"
+  },
+  "widget_scatterplot": {
+   "additionalProperties": false,
+   "description": "Groups plotted by two queries (x and y).",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a scatterplot widget.",
+     "properties": {
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "colorByGroups": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      },
+      "xaxis": {
+       "$ref": "#/$defs/axis"
+      },
+      "yaxis": {
+       "$ref": "#/$defs/axis"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "scatterplot"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "scatterplot",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "scalar"
+  },
+  "widget_slo": {
+   "additionalProperties": false,
+   "description": "One SLO's status and error budget.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a slo widget.",
+     "properties": {
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "showErrorBudget": {
+       "default": true,
+       "type": "boolean"
+      },
+      "sloId": {
+       "pattern": "^[0-9a-f]{24}$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "sloId"
+     ],
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a slo has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "slo"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "slo",
+   "x-family": "entity"
+  },
+  "widget_slo_list": {
+   "additionalProperties": false,
+   "description": "A list of SLOs.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a slo_list widget.",
+     "properties": {
+      "limit": {
+       "default": 25,
+       "enum": [
+        10,
+        25,
+        50,
+        100
+       ],
+       "type": "number"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "query": {
+       "maxLength": 100,
+       "type": "string"
+      },
+      "sort": {
+       "additionalProperties": true,
+       "properties": {
+        "column": {
+         "enum": [
+          "status",
+          "errorBudgetRemaining",
+          "name"
+         ],
+         "type": "string"
+        },
+        "order": {
+         "enum": [
+          "desc",
+          "asc"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a slo_list has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "slo_list"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "slo_list",
+   "x-family": "entity"
+  },
+  "widget_split_group": {
+   "additionalProperties": false,
+   "description": "One graph repeated per value of a tag.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a split_group widget.",
+     "properties": {
+      "anomalyDetection": {
+       "additionalProperties": true,
+       "properties": {
+        "mode": {
+         "enum": [
+          "show",
+          "hide"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "barChart": {
+       "additionalProperties": true,
+       "properties": {
+        "display": {
+         "default": "stacked",
+         "enum": [
+          "stacked",
+          "flat"
+         ],
+         "type": "string"
+        },
+        "layout": {
+         "enum": [
+          "flat",
+          "stacked"
+         ],
+         "type": "string"
+        },
+        "scaling": {
+         "default": "absolute",
+         "enum": [
+          "absolute",
+          "relative"
+         ],
+         "type": "string"
+        },
+        "showValues": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      },
+      "change": {
+       "additionalProperties": true,
+       "properties": {
+        "changeType": {
+         "default": "absolute",
+         "enum": [
+          "absolute",
+          "relative"
+         ],
+         "type": "string"
+        },
+        "compareTo": {
+         "default": "hour",
+         "enum": [
+          "hour",
+          "day",
+          "week",
+          "month"
+         ],
+         "type": "string"
+        },
+        "formulaIndex": {
+         "default": 0,
+         "type": "integer"
+        },
+        "increaseGood": {
+         "default": true,
+         "type": "boolean"
+        },
+        "orderBy": {
+         "default": "change",
+         "enum": [
+          "change",
+          "name",
+          "present",
+          "past"
+         ],
+         "type": "string"
+        },
+        "orderDir": {
+         "default": "desc",
+         "enum": [
+          "asc",
+          "desc"
+         ],
+         "type": "string"
+        },
+        "showPresent": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      },
+      "changeIndicator": {
+       "additionalProperties": true,
+       "properties": {
+        "color": {
+         "enum": [
+          "neutral",
+          "increase_good",
+          "decrease_good"
+         ],
+         "type": "string"
+        },
+        "compareTo": {
+         "enum": [
+          "period",
+          "day",
+          "week",
+          "month",
+          "custom"
+         ],
+         "type": "string"
+        },
+        "custom": {
+         "$ref": "#/$defs/time"
+        },
+        "display": {
+         "enum": [
+          "off",
+          "relative",
+          "absolute",
+          "both"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "colorByGroups": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "freezeColumns": {
+       "type": "boolean"
+      },
+      "groupColumns": {
+       "additionalProperties": true,
+       "description": "Per group-by tag: {alias, hidden, textFormats}.",
+       "properties": {},
+       "type": "object"
+      },
+      "hasSearchBar": {
+       "enum": [
+        "auto",
+        "always",
+        "never"
+       ],
+       "type": "string"
+      },
+      "hideTotal": {
+       "type": "boolean"
+      },
+      "legendType": {
+       "enum": [
+        "automatic",
+        "inline",
+        "table",
+        "none"
+       ],
+       "type": "string"
+      },
+      "legend_columns": {
+       "default": [
+        "value",
+        "avg",
+        "sum",
+        "min",
+        "max"
+       ],
+       "items": {
+        "enum": [
+         "value",
+         "avg",
+         "sum",
+         "min",
+         "max"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "legend_layout": {
+       "default": "horizontal",
+       "description": "Mirror of legend_mode for the classic board (stored boards also hold \"auto\").",
+       "enum": [
+        "horizontal",
+        "vertical",
+        "none",
+        "auto"
+       ],
+       "type": "string"
+      },
+      "legend_mode": {
+       "default": "auto",
+       "enum": [
+        "auto",
+        "compact",
+        "expanded",
+        "none"
+       ],
+       "type": "string"
+      },
+      "markers": {
+       "items": {
+        "$ref": "#/$defs/marker"
+       },
+       "type": "array"
+      },
+      "overlays": {
+       "items": {
+        "$ref": "#/$defs/overlay"
+       },
+       "maxItems": 5,
+       "type": "array"
+      },
+      "paletteFlip": {
+       "type": "boolean"
+      },
+      "pie": {
+       "additionalProperties": true,
+       "properties": {
+        "hideEmpty": {
+         "default": true,
+         "type": "boolean"
+        },
+        "labelContent": {
+         "enum": [
+          "percent",
+          "value",
+          "both"
+         ],
+         "type": "string"
+        },
+        "layout": {
+         "default": "nested",
+         "enum": [
+          "flat",
+          "nested"
+         ],
+         "type": "string"
+        },
+        "legendPosition": {
+         "enum": [
+          "auto",
+          "right",
+          "bottom"
+         ],
+         "type": "string"
+        },
+        "slices": {
+         "default": 10,
+         "enum": [
+          5,
+          10,
+          25,
+          50,
+          100
+         ],
+         "type": "number"
+        },
+        "variant": {
+         "enum": [
+          "donut",
+          "pie"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "rightYaxis": {
+       "$ref": "#/$defs/axis"
+      },
+      "scrollHorizontally": {
+       "type": "boolean"
+      },
+      "show_legend": {
+       "default": true,
+       "description": "Mirror of legend_mode for the classic board.",
+       "type": "boolean"
+      },
+      "sortThenBy": {
+       "items": {
+        "additionalProperties": true,
+        "properties": {
+         "name": {
+          "type": "string"
+         },
+         "order": {
+          "enum": [
+           "ASC",
+           "DESC"
+          ],
+          "type": "string"
+         }
+        },
+        "type": "object"
+       },
+       "type": "array"
+      },
+      "split": {
+       "additionalProperties": true,
+       "properties": {
+        "dimension": {
+         "type": "string"
+        },
+        "limit": {
+         "default": 12,
+         "maximum": 50,
+         "minimum": 1,
+         "type": "integer"
+        },
+        "size": {
+         "default": "sm",
+         "enum": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+         ],
+         "type": "string"
+        },
+        "sort": {
+         "additionalProperties": true,
+         "properties": {
+          "aggregation": {
+           "enum": [
+            "avg",
+            "sum",
+            "min",
+            "max",
+            "last"
+           ],
+           "type": "string"
+          },
+          "order": {
+           "enum": [
+            "asc",
+            "desc"
+           ],
+           "type": "string"
+          }
+         },
+         "type": "object"
+        },
+        "sourceType": {
+         "description": "The graph type repeated: one of the splittable types.",
+         "enum": [
+          "timeseries",
+          "query_value",
+          "toplist",
+          "table",
+          "sunburst",
+          "treemap",
+          "bar_chart",
+          "change",
+          "geomap",
+          "scatterplot"
+         ],
+         "type": "string"
+        },
+        "staticSplits": {
+         "items": {},
+         "type": "array"
+        },
+        "uniformYAxes": {
+         "default": true,
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      },
+      "textAlign": {
+       "default": "center",
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ],
+       "type": "string"
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      },
+      "toplist": {
+       "additionalProperties": true,
+       "properties": {
+        "display": {
+         "enum": [
+          "stacked",
+          "flat"
+         ],
+         "type": "string"
+        },
+        "layout": {
+         "enum": [
+          "flat",
+          "stacked"
+         ],
+         "type": "string"
+        },
+        "legend": {
+         "enum": [
+          "auto",
+          "compact",
+          "none"
+         ],
+         "type": "string"
+        },
+        "scaling": {
+         "enum": [
+          "absolute",
+          "relative"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "view": {
+       "additionalProperties": true,
+       "properties": {
+        "center": {
+         "description": "[longitude, latitude]",
+         "items": {
+          "type": "number"
+         },
+         "type": "array"
+        },
+        "focus": {
+         "description": "WORLD, CUSTOM, a region (APAC, EMEA, ...) or a country name.",
+         "type": "string"
+        },
+        "zoom": {
+         "type": "number"
+        }
+       },
+       "type": "object"
+      },
+      "xaxis": {
+       "$ref": "#/$defs/axis"
+      },
+      "yaxis": {
+       "$ref": "#/$defs/axis"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "split_group"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "split_group",
+   "x-family": "split",
+   "x-requests": "queries"
+  },
+  "widget_sunburst": {
+   "additionalProperties": false,
+   "description": "A pie or donut of the groups.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a sunburst widget.",
+     "properties": {
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "hideTotal": {
+       "type": "boolean"
+      },
+      "legendType": {
+       "enum": [
+        "automatic",
+        "inline",
+        "table",
+        "none"
+       ],
+       "type": "string"
+      },
+      "pie": {
+       "additionalProperties": true,
+       "properties": {
+        "hideEmpty": {
+         "default": true,
+         "type": "boolean"
+        },
+        "labelContent": {
+         "enum": [
+          "percent",
+          "value",
+          "both"
+         ],
+         "type": "string"
+        },
+        "layout": {
+         "default": "nested",
+         "enum": [
+          "flat",
+          "nested"
+         ],
+         "type": "string"
+        },
+        "legendPosition": {
+         "enum": [
+          "auto",
+          "right",
+          "bottom"
+         ],
+         "type": "string"
+        },
+        "slices": {
+         "default": 10,
+         "enum": [
+          5,
+          10,
+          25,
+          50,
+          100
+         ],
+         "type": "number"
+        },
+        "variant": {
+         "enum": [
+          "donut",
+          "pie"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "sunburst"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "sunburst",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "scalar"
+  },
+  "widget_table": {
+   "additionalProperties": false,
+   "description": "Rows per group with a column per formula.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a table widget.",
+     "properties": {
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "freezeColumns": {
+       "type": "boolean"
+      },
+      "groupColumns": {
+       "additionalProperties": true,
+       "description": "Per group-by tag: {alias, hidden, textFormats}.",
+       "properties": {},
+       "type": "object"
+      },
+      "hasSearchBar": {
+       "enum": [
+        "auto",
+        "always",
+        "never"
+       ],
+       "type": "string"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "scrollHorizontally": {
+       "type": "boolean"
+      },
+      "sortThenBy": {
+       "items": {
+        "additionalProperties": true,
+        "properties": {
+         "name": {
+          "type": "string"
+         },
+         "order": {
+          "enum": [
+           "ASC",
+           "DESC"
+          ],
+          "type": "string"
+         }
+        },
+        "type": "object"
+       },
+       "type": "array"
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "table"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "table",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "scalar"
+  },
+  "widget_timeseries": {
+   "additionalProperties": false,
+   "description": "Lines, areas or bars over time.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a timeseries widget.",
+     "properties": {
+      "anomalyDetection": {
+       "additionalProperties": true,
+       "properties": {
+        "mode": {
+         "enum": [
+          "show",
+          "hide"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "legend_columns": {
+       "default": [
+        "value",
+        "avg",
+        "sum",
+        "min",
+        "max"
+       ],
+       "items": {
+        "enum": [
+         "value",
+         "avg",
+         "sum",
+         "min",
+         "max"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "legend_layout": {
+       "default": "horizontal",
+       "description": "Mirror of legend_mode for the classic board (stored boards also hold \"auto\").",
+       "enum": [
+        "horizontal",
+        "vertical",
+        "none",
+        "auto"
+       ],
+       "type": "string"
+      },
+      "legend_mode": {
+       "default": "auto",
+       "enum": [
+        "auto",
+        "compact",
+        "expanded",
+        "none"
+       ],
+       "type": "string"
+      },
+      "markers": {
+       "items": {
+        "$ref": "#/$defs/marker"
+       },
+       "type": "array"
+      },
+      "overlays": {
+       "items": {
+        "$ref": "#/$defs/overlay"
+       },
+       "maxItems": 5,
+       "type": "array"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "rightYaxis": {
+       "$ref": "#/$defs/axis"
+      },
+      "show_legend": {
+       "default": true,
+       "description": "Mirror of legend_mode for the classic board.",
+       "type": "boolean"
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      },
+      "yaxis": {
+       "$ref": "#/$defs/axis"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "timeseries"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "timeseries",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "timeseries"
+  },
+  "widget_toplist": {
+   "additionalProperties": false,
+   "description": "Top groups by value.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a toplist widget.",
+     "properties": {
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      },
+      "toplist": {
+       "additionalProperties": true,
+       "properties": {
+        "display": {
+         "enum": [
+          "stacked",
+          "flat"
+         ],
+         "type": "string"
+        },
+        "layout": {
+         "enum": [
+          "flat",
+          "stacked"
+         ],
+         "type": "string"
+        },
+        "legend": {
+         "enum": [
+          "auto",
+          "compact",
+          "none"
+         ],
+         "type": "string"
+        },
+        "scaling": {
+         "enum": [
+          "absolute",
+          "relative"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "toplist"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "toplist",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "scalar"
+  },
+  "widget_topology_map": {
+   "additionalProperties": false,
+   "description": "A service map.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a topology_map widget.",
+     "properties": {
+      "dataSource": {
+       "default": "service_map",
+       "type": "string"
+      },
+      "env": {
+       "description": "Empty = every environment.",
+       "pattern": "^[\\w.\\-]{0,100}$",
+       "type": "string"
+      },
+      "external": {
+       "default": false,
+       "type": "boolean"
+      },
+      "filters": {
+       "description": "Narrows the map, e.g. \"env:prod type:db checkout\". Keys: env: (exact names, several = any of them; AND-ed with env), service: (node name), type: (app; db = databases and messaging destinations; messaging = messaging sources; external, shown only with external), subtype: (e.g. mysql, redis). Several values of a key = any of them; keys are combined; \"*\" is a wildcard except in env:; -key:value excludes (not env:). A bare word matches node names containing it. Matched nodes are shown with their direct callers and callees.",
+       "maxLength": 500,
+       "type": "string"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "projectId": {
+       "type": "string"
+      },
+      "service": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a topology_map has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "topology_map"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "topology_map",
+   "x-family": "entity"
+  },
+  "widget_trace_service": {
+   "additionalProperties": false,
+   "description": "An APM service's summary charts.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a trace_service widget.",
+     "properties": {
+      "columns": {
+       "enum": [
+        1,
+        2,
+        3
+       ],
+       "type": "number"
+      },
+      "env": {
+       "type": "string"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "projectId": {
+       "type": "string"
+      },
+      "sections": {
+       "items": {
+        "enum": [
+         "hits",
+         "errors",
+         "latency",
+         "breakdown",
+         "distribution",
+         "resources",
+         "apdex",
+         "failure"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "size": {
+       "enum": [
+        "small",
+        "medium",
+        "large"
+       ],
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "trace_service"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "trace_service",
+   "x-family": "service",
+   "x-requests": "queries",
+   "x-response-format": "timeseries"
+  },
+  "widget_treemap": {
+   "additionalProperties": false,
+   "description": "Nested rectangles sized by value.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a treemap widget.",
+     "properties": {
+      "autoscale": {
+       "default": true,
+       "type": "boolean"
+      },
+      "customLinks": {
+       "items": {
+        "$ref": "#/$defs/customLink"
+       },
+       "maxItems": 50,
+       "type": "array"
+      },
+      "formulaOptions": {
+       "description": "Indexed like requests[0].formulas; a formula with no options may be null.",
+       "items": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/formulaOption"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "precision": {
+       "maximum": 10,
+       "minimum": 0,
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "time": {
+       "$ref": "#/$defs/time"
+      }
+     },
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "items": {
+      "$ref": "#/$defs/request"
+     },
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "treemap"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type",
+    "requests"
+   ],
+   "title": "treemap",
+   "x-family": "chart",
+   "x-requests": "queries",
+   "x-response-format": "scalar"
+  },
+  "widget_video": {
+   "additionalProperties": false,
+   "description": "A YouTube or https video.",
+   "properties": {
+    "color": {
+     "description": "free_text.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "definition": {
+     "additionalProperties": true,
+     "description": "Settings of a video widget.",
+     "properties": {
+      "autoplay": {
+       "type": "boolean"
+      },
+      "controls": {
+       "default": true,
+       "type": "boolean"
+      },
+      "descriptionAsSubtitle": {
+       "type": "boolean"
+      },
+      "loop": {
+       "type": "boolean"
+      },
+      "muted": {
+       "type": "boolean"
+      },
+      "powerpackKey": {
+       "description": "Inside a powerpack instance: the pack's key for this widget.",
+       "type": "string"
+      },
+      "source": {
+       "enum": [
+        "file",
+        "youtube",
+        "iframe"
+       ],
+       "type": "string"
+      },
+      "transparentBackground": {
+       "type": "boolean"
+      },
+      "url": {
+       "description": "file / iframe: a public https:// URL.",
+       "maxLength": 2048,
+       "type": "string"
+      },
+      "videoId": {
+       "description": "youtube: the 11-character video id.",
+       "pattern": "^[A-Za-z0-9_-]{11}$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "source"
+     ],
+     "type": "object"
+    },
+    "description": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "fontSize": {
+     "description": "free_text.",
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "id": {
+     "description": "The widget's id on a tabbed board (what tabs[].widgetIds name)."
+    },
+    "layout": {
+     "$ref": "#/$defs/layout"
+    },
+    "legendColumns": {
+     "description": "Legacy spelling of definition.legend_columns.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "legendLayout": {
+     "description": "Legacy spelling of definition.legend_layout.",
+     "enum": [
+      "auto",
+      "horizontal",
+      "vertical"
+     ],
+     "type": "string"
+    },
+    "requests": {
+     "description": "Always empty: a video has no requests.",
+     "maxItems": 0,
+     "type": "array"
+    },
+    "showLegend": {
+     "description": "scatterplot; on other graphs a legacy spelling of definition.show_legend.",
+     "type": "boolean"
+    },
+    "text": {
+     "description": "free_text.",
+     "type": "string"
+    },
+    "textAlign": {
+     "description": "free_text: flex-start, center or flex-end.",
+     "type": "string"
+    },
+    "time": {
+     "$ref": "#/$defs/time"
+    },
+    "timeseriesBackground": {
+     "additionalProperties": true,
+     "description": "query_value: the trend drawn behind the number.",
+     "properties": {
+      "type": {
+       "enum": [
+        "area",
+        "bar",
+        "line"
+       ],
+       "type": "string"
+      },
+      "yaxis": {
+       "additionalProperties": true,
+       "properties": {
+        "includeZero": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "titleAlign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ],
+     "type": "string"
+    },
+    "titleSize": {
+     "type": "number"
+    },
+    "type": {
+     "enum": [
+      "video"
+     ],
+     "type": "string"
+    },
+    "widgets": {
+     "description": "Always empty: only a group holds widgets.",
+     "maxItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "type"
+   ],
+   "title": "video",
+   "x-family": "static"
+  }
+ },
+ "$id": "https://app.atatus.com/schemas/dashboard.json",
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "additionalProperties": false,
+ "description": "A dashboard as Export \u2192 JSON writes it and the /v2/dashboards API takes it.",
+ "properties": {
+  "dashboardType": {
+   "enum": [
+    "custom_timeboard",
+    "custom_screenboard"
+   ],
+   "type": "string"
+  },
+  "description": {
+   "type": "string"
+  },
+  "isGlobalTimeSelectable": {
+   "type": "boolean"
+  },
+  "isReadOnly": {
+   "description": "Only owners and admins may change it.",
+   "type": "boolean"
+  },
+  "layoutType": {
+   "description": "ordered with custom_timeboard, free with custom_screenboard.",
+   "enum": [
+    "ordered",
+    "free"
+   ],
+   "type": "string"
+  },
+  "reflowType": {
+   "enum": [
+    "fixed",
+    "auto"
+   ],
+   "type": "string"
+  },
+  "spaceIds": {
+   "description": "Space labels; empty = the whole account.",
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "tabs": {
+   "items": {
+    "$ref": "#/$defs/tab"
+   },
+   "maxItems": 30,
+   "type": "array"
+  },
+  "templateVariablePresets": {
+   "items": {
+    "$ref": "#/$defs/templateVariablePreset"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "templateVariables": {
+   "items": {
+    "$ref": "#/$defs/templateVariable"
+   },
+   "type": "array"
+  },
+  "timeDur": {
+   "description": "Default time range, e.g. 60m, 1d; empty = none.",
+   "pattern": "^(\\d+[mhdwM])?$",
+   "type": "string"
+  },
+  "title": {
+   "type": "string"
+  },
+  "widgets": {
+   "items": {
+    "$ref": "#/$defs/widget"
+   },
+   "maxItems": 500,
+   "type": "array"
+  }
+ },
+ "required": [
+  "title",
+  "widgets"
+ ],
+ "title": "Atatus dashboard",
+ "x-schema-version": "1.7.0"
+}

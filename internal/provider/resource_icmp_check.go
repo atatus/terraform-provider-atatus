@@ -1,12 +1,8 @@
 package provider
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
@@ -27,9 +23,10 @@ import (
 )
 
 var (
-	_ resource.Resource               = &ICMPCheckResource{}
-	_ resource.ResourceWithConfigure  = &ICMPCheckResource{}
-	_ resource.ResourceWithModifyPlan = &ICMPCheckResource{}
+	_ resource.Resource                = &ICMPCheckResource{}
+	_ resource.ResourceWithConfigure   = &ICMPCheckResource{}
+	_ resource.ResourceWithModifyPlan  = &ICMPCheckResource{}
+	_ resource.ResourceWithImportState = &ICMPCheckResource{}
 )
 
 func NewICMPCheckResource() resource.Resource {
@@ -37,10 +34,7 @@ func NewICMPCheckResource() resource.Resource {
 }
 
 type ICMPCheckResource struct {
-	client    *http.Client
-	apiKey    string
-	accountID string
-	authType  string
+	syntheticBase
 }
 
 type ICMPCheckAssertionModel struct {
@@ -154,6 +148,7 @@ func (r *ICMPCheckResource) Schema(ctx context.Context, req resource.SchemaReque
 				Optional:    true,
 				Computed:    true,
 				Default:     int64default.StaticInt64(0),
+				Validators:  []validator.Int64{int64validator.Between(0, 3)},
 			},
 			"min_location_failed": schema.Int64Attribute{
 				Description: "Minimum number of locations that must fail before alerting (default: 1). Only applicable when run_type is 'parallel'. Inapplicable and not allowed when run_type is 'sequential'.",
@@ -189,6 +184,7 @@ func (r *ICMPCheckResource) Schema(ctx context.Context, req resource.SchemaReque
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
+				Default:     defaultLocations,
 			},
 			"tags": schema.ListAttribute{
 				Description: "List of tags (e.g., [\"env:production\"]).",
@@ -226,114 +222,6 @@ func (r *ICMPCheckResource) Schema(ctx context.Context, req resource.SchemaReque
 	}
 }
 
-func (r *ICMPCheckResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	if req.ProviderData == nil {
-		return
-	}
-	cfg, ok := req.ProviderData.(*AtatusConfig)
-	if !ok {
-		resp.Diagnostics.AddError("Configuration Error", "Expected *AtatusConfig")
-		return
-	}
-	r.client = &http.Client{}
-	r.apiKey = cfg.ApiKey
-	r.accountID = cfg.AccountID
-	r.authType = cfg.AuthType
-}
-
-func (r *ICMPCheckResource) setHeaders(req *http.Request) {
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("User-Agent", "terraform-provider-atatus")
-	if r.authType == "cookie" {
-		req.Header.Set("Cookie", r.apiKey)
-	} else {
-		req.Header.Set("X-API-KEY", r.apiKey)
-	}
-}
-
-func (r *ICMPCheckResource) getLocations(ctx context.Context, locationsList types.List) ([]string, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	locations := []string{"US_NEW_YORK"}
-
-	if !locationsList.IsNull() && !locationsList.IsUnknown() {
-		var elements []types.String
-		diags.Append(locationsList.ElementsAs(ctx, &elements, false)...)
-		if diags.HasError() {
-			return locations, diags
-		}
-
-		if len(elements) > 0 {
-			locations = make([]string, 0, len(elements))
-			for _, el := range elements {
-				locations = append(locations, el.ValueString())
-			}
-		}
-	}
-	return locations, diags
-}
-
-func (r *ICMPCheckResource) getTags(ctx context.Context, tagsList types.List) ([]string, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	tags := []string{}
-
-	if !tagsList.IsNull() && !tagsList.IsUnknown() {
-		var elements []types.String
-		diags.Append(tagsList.ElementsAs(ctx, &elements, false)...)
-		if diags.HasError() {
-			return tags, diags
-		}
-
-		if len(elements) > 0 {
-			tags = make([]string, 0, len(elements))
-			for _, el := range elements {
-				tags = append(tags, el.ValueString())
-			}
-		}
-	}
-	return tags, diags
-}
-
-func (r *ICMPCheckResource) getChannelIDs(ctx context.Context, channelIDsList types.List) ([]string, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	channels := []string{}
-
-	if !channelIDsList.IsNull() && !channelIDsList.IsUnknown() {
-		var elements []types.String
-		diags.Append(channelIDsList.ElementsAs(ctx, &elements, false)...)
-		if diags.HasError() {
-			return channels, diags
-		}
-
-		if len(elements) > 0 {
-			channels = make([]string, 0, len(elements))
-			for _, el := range elements {
-				channels = append(channels, el.ValueString())
-			}
-		}
-	}
-	return channels, diags
-}
-
-func (r *ICMPCheckResource) getEmails(ctx context.Context, emailsList types.List) ([]string, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	var emails []string
-
-	if !emailsList.IsNull() && !emailsList.IsUnknown() {
-		var elements []types.String
-		diags.Append(emailsList.ElementsAs(ctx, &elements, false)...)
-		if diags.HasError() {
-			return emails, diags
-		}
-
-		for _, el := range elements {
-			if !el.IsNull() && !el.IsUnknown() && el.ValueString() != "" {
-				emails = append(emails, el.ValueString())
-			}
-		}
-	}
-	return emails, diags
-}
-
 func (r *ICMPCheckResource) getAssertions(ctx context.Context, assertionsList types.List) ([]ICMPCheckAssertionModel, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	var assertions []ICMPCheckAssertionModel
@@ -345,118 +233,6 @@ func (r *ICMPCheckResource) getAssertions(ctx context.Context, assertionsList ty
 		}
 	}
 	return assertions, diags
-}
-
-func (r *ICMPCheckResource) fetchNotificationChannels(ctx context.Context) ([]NotificationChannel, error) {
-	if r.client == nil || r.apiKey == "" {
-		return nil, fmt.Errorf("provider client is not configured")
-	}
-
-	apiURL := "https://www.atatus.com/v2/channels"
-	httpReq, err := http.NewRequestWithContext(ctx, "GET", apiURL, nil)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create request: %w", err)
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		return nil, fmt.Errorf("failed to query notification channels: %w", err)
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		return nil, fmt.Errorf("channels API error HTTP %d: %s", httpResp.StatusCode, string(respBytes))
-	}
-
-	var channelList []NotificationChannel
-	if err := json.NewDecoder(httpResp.Body).Decode(&channelList); err != nil {
-		return nil, fmt.Errorf("failed to decode channels response: %w", err)
-	}
-
-	return channelList, nil
-}
-
-func (r *ICMPCheckResource) resolveEmailsToChannelIDs(ctx context.Context, emails []string) ([]string, error) {
-	if len(emails) == 0 {
-		return nil, nil
-	}
-
-	channels, err := r.fetchNotificationChannels(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	emailToID := make(map[string]string)
-	var availableEmails []string
-	for _, ch := range channels {
-		if strings.EqualFold(ch.Type, "EMAIL") {
-			rec := ch.Settings.Recipient
-			if rec == "" {
-				rec = ch.Name
-			}
-			if rec != "" {
-				emailToID[strings.ToLower(strings.TrimSpace(rec))] = ch.ID
-				availableEmails = append(availableEmails, rec)
-			}
-		}
-	}
-
-	var resolvedIDs []string
-	for _, email := range emails {
-		clean := strings.ToLower(strings.TrimSpace(email))
-		if id, ok := emailToID[clean]; ok {
-			resolvedIDs = append(resolvedIDs, id)
-		} else {
-			if len(availableEmails) > 0 {
-				return nil, fmt.Errorf("no email notification channel found for '%s' in Atatus account. Please create this notification channel in Atatus first. Available email channels in account: [%s]", email, strings.Join(availableEmails, ", "))
-			}
-			return nil, fmt.Errorf("no email notification channel found for '%s' in Atatus account. Please create this notification channel in Atatus first", email)
-		}
-	}
-
-	return resolvedIDs, nil
-}
-
-func (r *ICMPCheckResource) resolveChannelIDsToEmails(ctx context.Context, channelIDs []string) ([]string, []string, error) {
-	if len(channelIDs) == 0 {
-		return nil, nil, nil
-	}
-
-	channels, err := r.fetchNotificationChannels(ctx)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	idToChannel := make(map[string]NotificationChannel)
-	for _, ch := range channels {
-		idToChannel[ch.ID] = ch
-	}
-
-	var emails []string
-	var nonEmailChannelIDs []string
-
-	for _, id := range channelIDs {
-		if ch, ok := idToChannel[id]; ok {
-			if strings.EqualFold(ch.Type, "EMAIL") {
-				rec := ch.Settings.Recipient
-				if rec == "" {
-					rec = ch.Name
-				}
-				if rec != "" {
-					emails = append(emails, rec)
-				}
-			} else {
-				nonEmailChannelIDs = append(nonEmailChannelIDs, id)
-			}
-		} else {
-			nonEmailChannelIDs = append(nonEmailChannelIDs, id)
-		}
-	}
-
-	return emails, nonEmailChannelIDs, nil
 }
 
 func normalizeICMPOperator(op string) string {
@@ -543,7 +319,7 @@ func (r *ICMPCheckResource) ModifyPlan(ctx context.Context, req resource.ModifyP
 		return
 	}
 
-	if r.client == nil || r.apiKey == "" {
+	if r.client == nil {
 		return
 	}
 
@@ -791,42 +567,9 @@ func (r *ICMPCheckResource) Create(ctx context.Context, req resource.CreateReque
 		},
 	}
 
-	bodyBytes, err := json.Marshal(payload)
-	if err != nil {
-		resp.Diagnostics.AddError("JSON Encoding Error", err.Error())
-		return
-	}
-
-	apiURL := "https://www.atatus.com/v2/synthetic/checks"
-	httpReq, err := http.NewRequestWithContext(ctx, "POST", apiURL, bytes.NewBuffer(bodyBytes))
-	if err != nil {
-		resp.Diagnostics.AddError("Request Creation Error", err.Error())
-		return
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		resp.Diagnostics.AddError("API Request Failed", err.Error())
-		return
-	}
-	defer httpResp.Body.Close()
-
-	respBytes, err := io.ReadAll(httpResp.Body)
-	if err != nil {
-		resp.Diagnostics.AddError("Response Read Error", err.Error())
-		return
-	}
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		resp.Diagnostics.AddError("API Failure", fmt.Sprintf("HTTP %d: %s", httpResp.StatusCode, string(respBytes)))
-		return
-	}
-
 	var atatusResp ICMPCheckResponse
-	if err := json.Unmarshal(respBytes, &atatusResp); err != nil {
-		resp.Diagnostics.AddError("JSON Decoding Error", fmt.Sprintf("Error decoding response: %s. Raw: %s", err.Error(), string(respBytes)))
+	if err := r.createCheck(ctx, payload, &atatusResp); err != nil {
+		resp.Diagnostics.AddError("API Failure On Create", err.Error())
 		return
 	}
 
@@ -914,36 +657,13 @@ func (r *ICMPCheckResource) Read(ctx context.Context, req resource.ReadRequest, 
 		return
 	}
 
-	apiURL := fmt.Sprintf("https://www.atatus.com/v2/synthetic/checks/%s", state.ID.ValueString())
-	httpReq, err := http.NewRequestWithContext(ctx, "GET", apiURL, nil)
-	if err != nil {
-		resp.Diagnostics.AddError("Request Creation Error", err.Error())
-		return
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		resp.Diagnostics.AddError("API Read Failed", err.Error())
-		return
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode == http.StatusNotFound {
-		resp.State.RemoveResource(ctx)
-		return
-	}
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		resp.Diagnostics.AddError("API Read Failure", fmt.Sprintf("HTTP %d: %s", httpResp.StatusCode, string(respBytes)))
-		return
-	}
-
 	var atatusResp ICMPCheckResponse
-	if err := json.NewDecoder(httpResp.Body).Decode(&atatusResp); err != nil {
-		resp.Diagnostics.AddError("JSON Decode Error", err.Error())
+	if err := r.getCheck(ctx, state.ID.ValueString(), "icmp", &atatusResp); err != nil {
+		if IsNotFound(err) {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		resp.Diagnostics.AddError("API Failure On Read", err.Error())
 		return
 	}
 
@@ -988,24 +708,7 @@ func (r *ICMPCheckResource) Read(ctx context.Context, req resource.ReadRequest, 
 		state.Tags = types.ListNull(types.StringType)
 	}
 
-	emails, nonEmailChannels, err := r.resolveChannelIDsToEmails(ctx, atatusResp.ChannelIDs)
-	if err == nil {
-		if len(emails) > 0 {
-			emList, listDiags := types.ListValueFrom(ctx, types.StringType, emails)
-			resp.Diagnostics.Append(listDiags...)
-			state.Emails = emList
-		} else {
-			state.Emails = types.ListNull(types.StringType)
-		}
-
-		if len(nonEmailChannels) > 0 {
-			chList, listDiags := types.ListValueFrom(ctx, types.StringType, nonEmailChannels)
-			resp.Diagnostics.Append(listDiags...)
-			state.ChannelIDs = chList
-		} else {
-			state.ChannelIDs = types.ListNull(types.StringType)
-		}
-	}
+	r.readChannels(ctx, atatusResp.ChannelIDs, &state.Emails, &state.ChannelIDs, &resp.Diagnostics)
 
 	if len(atatusResp.Assertions) > 0 {
 		var assertionModels []ICMPCheckAssertionModel
@@ -1153,31 +856,8 @@ func (r *ICMPCheckResource) Update(ctx context.Context, req resource.UpdateReque
 		payload["minLocationFailed"] = minLocationFailed
 	}
 
-	bodyBytes, err := json.Marshal(payload)
-	if err != nil {
-		resp.Diagnostics.AddError("JSON Encoding Error", err.Error())
-		return
-	}
-
-	apiURL := fmt.Sprintf("https://www.atatus.com/v2/synthetic/checks/%s", state.ID.ValueString())
-	httpReq, err := http.NewRequestWithContext(ctx, "PATCH", apiURL, bytes.NewBuffer(bodyBytes))
-	if err != nil {
-		resp.Diagnostics.AddError("Request Creation Error", err.Error())
-		return
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		resp.Diagnostics.AddError("API Update Failed", err.Error())
-		return
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		resp.Diagnostics.AddError("API Failure On Update", fmt.Sprintf("HTTP %d: %s", httpResp.StatusCode, string(respBytes)))
+	if err := r.patchCheck(ctx, state.ID.ValueString(), payload); err != nil {
+		resp.Diagnostics.AddError("API Failure On Update", err.Error())
 		return
 	}
 
@@ -1229,29 +909,7 @@ func (r *ICMPCheckResource) Delete(ctx context.Context, req resource.DeleteReque
 		return
 	}
 
-	apiURL := fmt.Sprintf("https://www.atatus.com/v2/synthetic/checks/%s", state.ID.ValueString())
-	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", apiURL, nil)
-	if err != nil {
-		resp.Diagnostics.AddError("Request Creation Error", err.Error())
-		return
-	}
-
-	r.setHeaders(httpReq)
-
-	httpResp, err := r.client.Do(httpReq)
-	if err != nil {
-		resp.Diagnostics.AddError("API Delete Failed", err.Error())
-		return
-	}
-	defer httpResp.Body.Close()
-
-	if httpResp.StatusCode == http.StatusNotFound {
-		return
-	}
-
-	if httpResp.StatusCode < 200 || httpResp.StatusCode >= 300 {
-		respBytes, _ := io.ReadAll(httpResp.Body)
-		resp.Diagnostics.AddError("API Failure On Delete", fmt.Sprintf("HTTP %d: %s", httpResp.StatusCode, string(respBytes)))
-		return
+	if err := r.deleteCheck(ctx, state.ID.ValueString()); err != nil {
+		resp.Diagnostics.AddError("API Failure On Delete", err.Error())
 	}
 }
